@@ -1,0 +1,93 @@
+{
+  "real_wind_source": "open_meteo_era5_archive",
+  "rows": [
+    {
+      "config": "oxy_only",
+      "st_rmse": {
+        "1": 3.8423867225646973,
+        "2": 8.694225311279297,
+        "3": 14.752341270446777
+      },
+      "best": {
+        "1": {
+          "model": "st_transformer",
+          "rmse": 3.8423867225646973
+        },
+        "2": {
+          "model": "hybrid_clim_st",
+          "rmse": 5.190974235534668
+        },
+        "3": {
+          "model": "climatology",
+          "rmse": 5.205977439880371
+        }
+      }
+    },
+    {
+      "config": "phys_ts_sst",
+      "st_rmse": {
+        "1": 3.86824107170105,
+        "2": 5.833266735076904,
+        "3": 10.229302406311035
+      },
+      "best": {
+        "1": {
+          "model": "st_transformer",
+          "rmse": 3.86824107170105
+        },
+        "2": {
+          "model": "hybrid_clim_st",
+          "rmse": 5.06299352645874
+        },
+        "3": {
+          "model": "climatology",
+          "rmse": 5.205977439880371
+        }
+      }
+    },
+    {
+      "config": "phys_synth_wind",
+      "st_rmse": {
+        "1": 3.871232271194458,
+        "2": 5.151904582977295,
+        "3": 6.722994327545166
+      },
+      "best": {
+        "1": {
+          "model": "st_transformer",
+          "rmse": 3.871232271194458
+        },
+        "2": {
+          "model": "hybrid_clim_st",
+          "rmse": 4.913589000701904
+        },
+        "3": {
+          "model": "hybrid_clim_st",
+          "rmse": 5.188331127166748
+        }
+      }
+    },
+    {
+      "config": "phys_real_wind",
+      "st_rmse": {
+        "1": 3.875870943069458,
+        "2": 5.832258701324463,
+        "3": 9.810002326965332
+      },
+      "best": {
+        "1": {
+          "model": "st_transformer",
+          "rmse": 3.875870943069458
+        },
+        "2": {
+          "model": "hybrid_clim_st",
+          "rmse": 5.083466053009033
+        },
+        "3": {
+          "model": "climatology",
+          "rmse": 5.205977439880371
+        }
+      }
+    }
+  ]
+}

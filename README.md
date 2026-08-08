@@ -33,10 +33,14 @@ python scripts/bootstrap_and_smoke.py
 ```bash
 py -3.12 scripts/download_woa_ts.py
 py -3.12 scripts/download_oisst_monthly.py
-py -3.12 scripts/download_openmeteo_wind.py          # 或 --offline-synth
+# Real Open-Meteo / ERA5-backed wind (2° grid; 2015–2022 fetch + clim fill)
+py -3.12 scripts/download_openmeteo_wind.py --step 2.0 --pause 4 --fetch-start 2015-01-01 --fetch-end 2022-12-31
 py -3.12 scripts/build_physics_cube.py
 py -3.12 run_multilead.py --physics --quick
-py -3.12 run_multilead.py --physics --maskview --sparse mixed --quick
+# AIES ablation table
+py -3.12 scripts/run_physics_ablation.py --skip-download
+# Optional CDS ERA5 (needs ~/.cdsapirc)
+py -3.12 scripts/download_era5_cds.py
 ```
 
 ## 真稀疏 / 断面 / 多区域

@@ -103,15 +103,16 @@ Lead-1 ST RMSE rises from 3.84 to 5.22 (still better than persistence 8.27); lea
 
 ### 4.4 Physics drivers, Mask-View, section extrapolation, multi-region
 
-**Physics multidrive** (WOA T/S → N², OISST, monsoon/ERA5-backed wind) on the same O₂ target:
+**Physics / wind ablation** (same WOA-informed O₂ target; see `results/tables/physics_ablation.md`):
 
-| Lead | O₂-only ST RMSE | Physics ST RMSE | Physics hybrid RMSE |
-|---:|---:|---:|---:|
-| 1 | 3.84 | 3.87 | 3.87 |
-| 2 | 8.69 | **5.69** | **5.04** |
-| 3 | 14.75 | 9.12 | 5.24 |
+| Config | Lead-1 ST | Lead-2 ST | Lead-2 best |
+|---|---:|---:|---|
+| oxy_only | 3.84 | 8.69 | hybrid 5.19 |
+| phys_ts_sst (no wind) | 3.87 | 5.83 | hybrid 5.06 |
+| phys_synth_wind | 3.87 | 5.15 | hybrid 4.91 |
+| **phys_real_wind (Open-Meteo/ERA5)** | 3.88 | **5.83** | **hybrid 5.08** |
 
-Physical channels mainly rescue mid-lead Transformer skill; hybrid still leans on climatology at lead 3.
+T/S + SST alone recover most of the mid-lead gain versus oxygen-only history. Real Open-Meteo (ERA5-backed) wind replaces the offline monsoon driver for the paper’s main physics run; synthetic wind can look stronger at lead 2 by aligning too cleanly with the seasonal DO cycle and is reported only as an ablation control. CDS ERA5 remains optional when credentials are available.
 
 **Argo/section sparsity.** With Argo-column masks, lead-1 ST RMSE ≈ 5.22 (still beats persistence). Section-extrapolation (oxygen visible only on a Yangtze plume transect) yields ST RMSE 5.21 vs persistence 8.26 — a full-field forecast from column-limited inputs.
 

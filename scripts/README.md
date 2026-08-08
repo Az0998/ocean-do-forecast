@@ -10,7 +10,10 @@
 | `download_woa_oxygen.py` | 下载 WOA18 O2 并裁区域 |
 | `download_woa_ts.py` | 下载 WOA18 T/S 并裁区域 |
 | `download_oisst_monthly.py` | NOAA OISST 月均 SST |
-| `download_openmeteo_wind.py` | Open-Meteo/ERA5 风场（或 `--offline-synth`） |
+| `download_openmeteo_wind.py` | Open-Meteo/ERA5 风场（`--fetch-start/end`；或 `--offline-synth`） |
+| `download_ncep_wind.py` | NCEP 月均风（Open-Meteo 限流时的后备） |
+| `download_era5_cds.py` | CDS ERA5 月均（需 `~/.cdsapirc`） |
+| `run_physics_ablation.py` | AIES 物理/风场消融表 |
 | `build_woa_informed_cube.py` | WOA 气候态 + 合成距平氧立方体 |
 | `build_physics_cube.py` | 多源物理立方体（O₂+T/S/N²+SST+风） |
 | `eval_section_extrapolation.py` | 断面稀疏输入 → 全场预报评估 |

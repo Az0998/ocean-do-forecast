@@ -6,6 +6,8 @@ data/raw/gobai/
 data/raw/woa/
 data/raw/oisst/
 data/raw/openmeteo/
+data/raw/ncep/
+data/raw/era5/
 data/processed/*.nc
 checkpoints/
 results/figures/*.png
