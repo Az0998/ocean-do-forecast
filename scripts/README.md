@@ -23,6 +23,8 @@
 | `run_physics_region_sensitivity.py` | 黄海 / 长江口敏感性（physics 子集） |
 | `forecast_demo.py` | 简易预报 demo + 误差图 |
 | `export_forecast_product.py` | 导出 lead-1 预报 NetCDF 产品 |
+| `export_web_forecast.py` | 导出 Pages 交互 Demo JSON/预览图 |
+| `eval_failure_modes.py` | 锋区/层结/沿岸失败模态诊断 |
 | `export_summary.py` | 汇总 `RESULTS_SUMMARY.md` |
 | `compose_paper_figures.py` | 2×2 投稿组合图 |
 | `compose_comparison_figures.py` | 物理/Mask-View/季节对比板 |

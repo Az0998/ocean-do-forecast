@@ -19,8 +19,9 @@
 | Mask-View 全模式消融 | ✅ `run_maskview_ablation.py` |
 | 季节技巧 + bootstrap CI | ✅ `run_multilead.py` 输出 |
 | 手稿（英）/ Cover letter / 组合图 | ✅ `paper/` · `aies_comparison_plate.png` |
-| Forecast product NetCDF | ✅ `scripts/export_forecast_product.py` |
-| GOBAI 真时变氧 | ⬜ 可选本地导入（非必须） |
+| Forecast product NetCDF + Web Demo | ✅ `export_forecast_product` · [`docs/demo.html`](https://az0998.github.io/ocean-do-forecast/demo.html) |
+| 失败模态（沿岸 / 跃层） | ✅ `eval_failure_modes.py` |
+| GOBAI 真时变氧 | ⬜ NCEI 手动下载后 `--from-file`（自动拉取常超时） |
 
 ## 30 秒冒烟
 
@@ -53,7 +54,12 @@ py -3.12 scripts/run_maskview_ablation.py --quick    # 全 Mask-View 消融表
 py -3.12 scripts/eval_section_extrapolation.py --quick
 py -3.12 scripts/run_physics_region_sensitivity.py --quick  # physics 子集
 py -3.12 scripts/export_forecast_product.py --quick  # lead-1 NetCDF
+py -3.12 scripts/export_web_forecast.py              # Pages demo JSON
+py -3.12 scripts/eval_failure_modes.py --quick
 py -3.12 scripts/compose_comparison_figures.py
+# GOBAI (manual download from NCEI 0259304, then):
+# py -3.12 scripts/download_gobai.py --from-file path\to\gobai.nc
+# py -3.12 scripts/subset_gobai.py && py -3.12 run_multilead.py --quick
 ```
 
 ## 常用命令

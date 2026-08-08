@@ -157,6 +157,16 @@ Forecast product: `results/products/forecast_lead1_latest.nc`.
 4. Mask-View patterns enforce an operational sparse-obs view: skill degrades gracefully from dense → block_time → point/mixed → station/Argo, and the model must **forecast the field**, not only interpolate dense maps.
 5. Physics-subset multi-region checks (Yangtze plume, southern Yellow Sea) reproduce the same lead-dependent hybrid narrative on real drivers.
 
+### 5.1 Failure modes (fronts, stratification, coast)
+
+Lead-1 absolute-error diagnosis on the physics cube (`results/tables/failure_modes.md`) shows a clear **coastal** penalty: western-shelf proximity tercile MAE rises from ≈2.95 (offshore/mid) to **3.30** µmol kg⁻¹ (coastal), with P90 ≈4.9. Depth-wise, the **50 dbar** level is the worst (MAE 3.18), consistent with the seasonal pycnocline / subsurface low-O₂ layer on the shelf.
+
+By contrast, SST-front and upper-N² terciles do **not** show a monotonic “high front = high error” pattern on this WOA-informed development cube — if anything, high-stratification cells are slightly easier. That is expected when oxygen anomalies are AR-like rather than frontogenetically forced: physical drivers improve mid-lead skill, but residual errors still concentrate where river–shelf gradients and subsurface hypoxia narratives matter most. Replacing the target with **GOBAI-O2** (or ship-section DO) is therefore the priority upgrade before claiming process-level frontal/thermocline failure modes in the journal version.
+
+### 5.2 Product surface
+
+Beyond tables for AIES, the repository ships a browsable lead-1 product: NetCDF (`results/products/forecast_lead1_latest.nc`) plus an interactive GitHub Pages demo (`docs/demo.html`) that exposes oxygen / anomaly / climatology fields by depth. This keeps the project legible as a portfolio artifact while the science paper is under revision.
+
 ## 6. Data and code availability
 
 - Code / project site: https://github.com/Az0998/ocean-do-forecast · https://az0998.github.io/ocean-do-forecast/

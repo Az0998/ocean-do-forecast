@@ -7,8 +7,8 @@
 - [x] 至少一张 lead–skill 曲线相对 persistence/climatology
 - [x] 缺氧事件指标（CSI/F1）与空间技巧图
 - [x] 物理消融 + Mask-View 全模式 + 季节 + bootstrap CI
-- [ ] 讨论失败模态（锋区、跃层、数据空洞）— 手稿可再扩写
-- [ ] GOBAI 时变氧上复现主表（可选加强）
+- [x] 讨论失败模态（沿岸为主；锋区/跃层待 GOBAI）— §5.1
+- [ ] GOBAI 时变氧上复现主表（NCEI 手动导入后跑 `subset_gobai.py`）
 
 ## 开放科学
 

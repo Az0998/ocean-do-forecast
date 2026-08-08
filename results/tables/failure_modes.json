@@ -1,0 +1,112 @@
+{
+  "region": "east_china_sea_shelf",
+  "epochs": 6,
+  "test_mae": 3.0942180156707764,
+  "bins": [
+    {
+      "driver": "front_|gradSST|",
+      "bin": "low",
+      "n_cells": 719,
+      "mae": 3.1457021236419678,
+      "p90": 4.501673698425293
+    },
+    {
+      "driver": "front_|gradSST|",
+      "bin": "mid",
+      "n_cells": 722,
+      "mae": 3.0973727703094482,
+      "p90": 4.508577346801758
+    },
+    {
+      "driver": "front_|gradSST|",
+      "bin": "high",
+      "n_cells": 719,
+      "mae": 3.039565086364746,
+      "p90": 4.332766532897949
+    },
+    {
+      "driver": "stratification_N2",
+      "bin": "low",
+      "n_cells": 719,
+      "mae": 3.146512508392334,
+      "p90": 4.633199691772461
+    },
+    {
+      "driver": "stratification_N2",
+      "bin": "mid",
+      "n_cells": 722,
+      "mae": 3.180856704711914,
+      "p90": 4.593295574188232
+    },
+    {
+      "driver": "stratification_N2",
+      "bin": "high",
+      "n_cells": 719,
+      "mae": 2.954923391342163,
+      "p90": 4.174228668212891
+    },
+    {
+      "driver": "coastal_proximity",
+      "bin": "low",
+      "n_cells": 648,
+      "mae": 2.9681975841522217,
+      "p90": 4.228161334991455
+    },
+    {
+      "driver": "coastal_proximity",
+      "bin": "mid",
+      "n_cells": 648,
+      "mae": 2.9474024772644043,
+      "p90": 4.113587856292725
+    },
+    {
+      "driver": "coastal_proximity",
+      "bin": "high",
+      "n_cells": 864,
+      "mae": 3.298844575881958,
+      "p90": 4.889816761016846
+    },
+    {
+      "driver": "thermocline_depth_level",
+      "bin": "at_max_N2",
+      "n_cells": 2160,
+      "mae": 3.1136980056762695,
+      "p90": 6.338217735290527
+    },
+    {
+      "driver": "thermocline_depth_level",
+      "bin": "other_depths",
+      "n_cells": 8640,
+      "mae": 3.0893478393554688,
+      "p90": 6.368440628051758
+    }
+  ],
+  "depth_mae": [
+    {
+      "depth_dbar": 10.0,
+      "mae": 3.096815347671509
+    },
+    {
+      "depth_dbar": 50.0,
+      "mae": 3.1785101890563965
+    },
+    {
+      "depth_dbar": 100.0,
+      "mae": 3.0324361324310303
+    },
+    {
+      "depth_dbar": 200.0,
+      "mae": 3.0852670669555664
+    },
+    {
+      "depth_dbar": 500.0,
+      "mae": 3.0780603885650635
+    }
+  ],
+  "notes": [
+    "front: horizontal |\u2207SST| terciles",
+    "stratification: upper-column N\u00b2 terciles",
+    "coastal: exp(-\u0394lon/3\u00b0) proximity to western boundary",
+    "thermocline: MAE at depth of max N\u00b2 vs other depths"
+  ]
+}
