@@ -73,9 +73,10 @@ def main():
     y_tr = normalize_anom(to_anomaly(train["y"][:, 0], train["times"], stats.clim), stats)
     y_va = normalize_anom(to_anomaly(val["y"][:, 0], val["times"], stats.clim), stats)
 
-    n_depth = x_tr.shape[2]
+    n_in = x_tr.shape[2]
+    n_oxygen = int(splits["meta"].get("n_oxygen", n_in))
     model = STTransformerForecast(
-        n_depth=n_depth, hidden=HIDDEN, n_heads=N_HEADS, n_layers=N_LAYERS
+        n_in=n_in, n_oxygen=n_oxygen, hidden=HIDDEN, n_heads=N_HEADS, n_layers=N_LAYERS
     ).to(device)
     opt = torch.optim.Adam(model.parameters(), lr=LR)
     loader = DataLoader(

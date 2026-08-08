@@ -4,6 +4,8 @@ __pycache__/
 venv/
 data/raw/gobai/
 data/raw/woa/
+data/raw/oisst/
+data/raw/openmeteo/
 data/processed/*.nc
 checkpoints/
 results/figures/*.png
@@ -11,3 +13,4 @@ results/figures/*.png
 *.pt
 .ipynb_checkpoints/
 _tmp_*
+data/processed/regional_oxygen_cube.__ecs_backup__.nc

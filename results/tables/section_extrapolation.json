@@ -1,0 +1,28 @@
+{
+  "region": "east_china_sea_shelf",
+  "task": "section_extrapolation",
+  "narrative": "Inputs visible only on section/Argo columns; targets are full-field forecasts.",
+  "metrics": [
+    {
+      "model": "persistence",
+      "rmse": 8.264860153198242,
+      "mae": 7.002298831939697,
+      "skill_vs_persist": 0.0,
+      "n_section_cells": 7
+    },
+    {
+      "model": "climatology",
+      "rmse": 5.297535419464111,
+      "mae": 4.189187526702881,
+      "skill_vs_persist": 0.5891562104225159,
+      "n_section_cells": 7
+    },
+    {
+      "model": "st_section",
+      "rmse": 5.206585884094238,
+      "mae": 4.107170104980469,
+      "skill_vs_persist": 0.6031420230865479,
+      "n_section_cells": 7
+    }
+  ]
+}

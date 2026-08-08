@@ -1,4 +1,4 @@
-"""BGC-Argo oxygen coverage survey via Argovis API (lightweight)."""
+"""BGC-Argo oxygen coverage survey via Argovis API (center+radius; box is deprecated)."""
 from __future__ import annotations
 
 import json
@@ -7,13 +7,14 @@ from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 ARGOVIS = "https://argovis-api.colorado.edu"
 
 
 def _get_json(url: str, timeout: int = 90) -> Any:
-    req = Request(url, headers={"User-Agent": "ocean-do-forecast/0.1"})
+    req = Request(url, headers={"User-Agent": "ocean-do-forecast/0.2"})
     with urlopen(req, timeout=timeout) as resp:
         return json.loads(resp.read().decode("utf-8"))
 
@@ -23,8 +24,8 @@ def _year_chunks(start: str, end: str) -> list[tuple[str, str]]:
     y1 = int(end[:4])
     chunks = []
     for y in range(y0, y1 + 1):
-        s = f"{y}-01-01T00:00:00Z" if y > y0 else f"{start[:10]}T00:00:00Z"
-        e = f"{y}-12-31T23:59:59Z" if y < y1 else f"{end[:10]}T23:59:59Z"
+        s = f"{y}-01-01T00:00:00.000Z" if y > y0 else f"{start[:10]}T00:00:00.000Z"
+        e = f"{y}-12-31T23:59:59.000Z" if y < y1 else f"{end[:10]}T23:59:59.000Z"
         chunks.append((s, e))
     return chunks
 
@@ -34,33 +35,42 @@ def fetch_bgc_profiles(
     start: str = "2015-01-01",
     end: str | None = None,
     pause_s: float = 0.4,
+    radius_km: float = 700.0,
 ) -> list[dict[str, Any]]:
-    """Fetch Argo profiles with dissolved oxygen (`doxy`) in a lon/lat box."""
+    """Fetch Argo profiles near a region using center+radius, then clip to the box."""
     end = end or datetime.utcnow().strftime("%Y-%m-%d")
     lon0, lon1 = float(region["lon_min"]), float(region["lon_max"])
     lat0, lat1 = float(region["lat_min"]), float(region["lat_max"])
-    box = f"[[{lon0},{lat0}],[{lon1},{lat1}]]"
+    lon_c = 0.5 * (lon0 + lon1)
+    lat_c = 0.5 * (lat0 + lat1)
     all_profiles: list[dict[str, Any]] = []
     seen: set[str] = set()
     for s, e in _year_chunks(start, end):
-        # metadata-only is lighter; doxy filter keeps BGC-O2
-        url = (
-            f"{ARGOVIS}/argo?startDate={s}&endDate={e}"
-            f"&box={box}&data=doxy"
+        q = urlencode(
+            {
+                "center": f"{lon_c},{lat_c}",
+                "radius": str(int(radius_km)),
+                "startDate": s,
+                "endDate": e,
+            }
         )
+        url = f"{ARGOVIS}/argo?{q}"
         try:
             data = _get_json(url)
         except Exception as exc:
-            # fallback without data filter (still spatial-temporal)
-            url2 = f"{ARGOVIS}/argo?startDate={s}&endDate={e}&box={box}"
-            try:
-                data = _get_json(url2)
-            except Exception:
-                raise RuntimeError(f"Argovis failed for {s[:4]}: {exc}") from exc
+            raise RuntimeError(f"Argovis failed for {s[:4]}: {exc}") from exc
         if not isinstance(data, list):
             continue
         for p in data:
-            pid = str(p.get("_id") or p.get("id") or json.dumps(p.get("geolocation")))
+            geo = p.get("geolocation") or {}
+            coords = geo.get("coordinates") or [None, None]
+            lon, lat = coords[0], coords[1]
+            if lon is None or lat is None:
+                continue
+            lon, lat = float(lon), float(lat)
+            if not (lon0 <= lon <= lon1 and lat0 <= lat <= lat1):
+                continue
+            pid = str(p.get("_id") or p.get("id") or f"{lon:.3f},{lat:.3f}")
             if pid in seen:
                 continue
             seen.add(pid)
@@ -94,7 +104,7 @@ def summarize_profiles(profiles: list[dict[str, Any]]) -> dict[str, Any]:
         if plat:
             platforms.add(str(plat))
         blob = json.dumps(p).lower()
-        if "doxy" in blob or "oxygen" in blob:
+        if "doxy" in blob or "oxygen" in blob or "bgc" in blob:
             o2_count += 1
     return {
         "n_profiles": len(profiles),
@@ -118,25 +128,18 @@ def score_region(summary: dict[str, Any]) -> float:
 def write_survey_report(results: dict[str, dict[str, Any]], path: Path) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     lines = [
-        "# Argo / BGC-O2 coverage survey",
+        "# Argo coverage survey",
         "",
-        f"Generated: {datetime.utcnow().isoformat()}Z",
-        "Source: Argovis API (`https://argovis-api.colorado.edu`)",
+        "Query mode: Argovis `center` + `radius`, clipped to region box.",
         "",
         "| Region | Profiles | O2-like | Platforms | Score |",
         "|---|---:|---:|---:|---:|",
     ]
-    ranked = sorted(results.items(), key=lambda kv: kv[1]["score"], reverse=True)
-    for key, row in ranked:
-        s = row["summary"]
+    for rid, payload in results.items():
+        s = payload.get("summary") or {}
         lines.append(
-            f"| {key} | {s['n_profiles']} | {s['n_oxygen_like']} | "
-            f"{s['n_platforms']} | {row['score']:.1f} |"
+            f"| {rid} | {s.get('n_profiles', 0)} | {s.get('n_oxygen_like', 0)} | "
+            f"{s.get('n_platforms', 0)} | {payload.get('score', 0):.1f} |"
         )
-    lines += ["", "## Recommendation", ""]
-    if ranked:
-        best = ranked[0][0]
-        lines.append(f"**Top density: `{best}`**. Project freeze prefers ECS for hypoxia narrative when coverage is usable.")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    path.with_suffix(".json").write_text(json.dumps(results, indent=2), encoding="utf-8")
     return path

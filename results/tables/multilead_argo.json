@@ -1,0 +1,338 @@
+{
+  "region": "east_china_sea_shelf",
+  "cube_source": "woa_informed",
+  "physics": false,
+  "maskview": false,
+  "channels": [
+    "oxygen_z0",
+    "oxygen_z1",
+    "oxygen_z2",
+    "oxygen_z3",
+    "oxygen_z4"
+  ],
+  "sparse": "argo",
+  "keep_ratio": 0.25,
+  "epochs": 8,
+  "blend_weights": {
+    "1": 1.0,
+    "2": 0.0,
+    "3": 0.0
+  },
+  "metrics": [
+    {
+      "lead_months": 1,
+      "model": "persistence",
+      "sparse": "argo",
+      "physics": false,
+      "maskview": false,
+      "blend_w_st": null,
+      "event_threshold": 195.093994140625,
+      "event_mode": "percentile_p10",
+      "rmse": 8.264860153198242,
+      "mae": 7.002298831939697,
+      "skill_vs_persist": 0.0,
+      "hypoxia_f1": 0.6002277904328018,
+      "hypoxia_csi": 0.4288039056143206
+    },
+    {
+      "lead_months": 1,
+      "model": "climatology",
+      "sparse": "argo",
+      "physics": false,
+      "maskview": false,
+      "blend_w_st": null,
+      "event_threshold": 195.093994140625,
+      "event_mode": "percentile_p10",
+      "rmse": 5.297535419464111,
+      "mae": 4.189187526702881,
+      "skill_vs_persist": 0.5891562104225159,
+      "hypoxia_f1": 0.6709429121231559,
+      "hypoxia_csi": 0.5048262548262549
+    },
+    {
+      "lead_months": 1,
+      "model": "lstm_anomaly",
+      "sparse": "argo",
+      "physics": false,
+      "maskview": false,
+      "blend_w_st": null,
+      "event_threshold": 195.093994140625,
+      "event_mode": "percentile_p10",
+      "rmse": 5.316771984100342,
+      "mae": 4.201953887939453,
+      "skill_vs_persist": 0.58616703748703,
+      "hypoxia_f1": 0.6734824281150159,
+      "hypoxia_csi": 0.5077071290944123
+    },
+    {
+      "lead_months": 1,
+      "model": "st_transformer",
+      "sparse": "argo",
+      "physics": false,
+      "maskview": false,
+      "blend_w_st": null,
+      "event_threshold": 195.093994140625,
+      "event_mode": "percentile_p10",
+      "rmse": 5.221177101135254,
+      "mae": 4.11484432220459,
+      "skill_vs_persist": 0.6009145975112915,
+      "hypoxia_f1": 0.6713826366559486,
+      "hypoxia_csi": 0.505324298160697
+    },
+    {
+      "lead_months": 1,
+      "model": "hybrid_clim_st",
+      "sparse": "argo",
+      "physics": false,
+      "maskview": false,
+      "blend_w_st": 1.0,
+      "event_threshold": 195.093994140625,
+      "event_mode": "percentile_p10",
+      "rmse": 5.221177101135254,
+      "mae": 4.11484432220459,
+      "skill_vs_persist": 0.6009145975112915,
+      "hypoxia_f1": 0.6713826366559486,
+      "hypoxia_csi": 0.505324298160697
+    },
+    {
+      "lead_months": 2,
+      "model": "persistence",
+      "sparse": "argo",
+      "physics": false,
+      "maskview": false,
+      "blend_w_st": null,
+      "event_threshold": 195.093994140625,
+      "event_mode": "percentile_p10",
+      "rmse": 14.814733505249023,
+      "mae": 12.986810684204102,
+      "skill_vs_persist": 0.0,
+      "hypoxia_f1": 0.35694366982710546,
+      "hypoxia_csi": 0.2172437202987101
+    },
+    {
+      "lead_months": 2,
+      "model": "climatology",
+      "sparse": "argo",
+      "physics": false,
+      "maskview": false,
+      "blend_w_st": null,
+      "event_threshold": 195.093994140625,
+      "event_mode": "percentile_p10",
+      "rmse": 5.227792263031006,
+      "mae": 4.137128829956055,
+      "skill_vs_persist": 0.8754771947860718,
+      "hypoxia_f1": 0.7186761229314421,
+      "hypoxia_csi": 0.5608856088560885
+    },
+    {
+      "lead_months": 2,
+      "model": "lstm_anomaly",
+      "sparse": "argo",
+      "physics": false,
+      "maskview": false,
+      "blend_w_st": null,
+      "event_threshold": 195.093994140625,
+      "event_mode": "percentile_p10",
+      "rmse": 9.037724494934082,
+      "mae": 7.516204357147217,
+      "skill_vs_persist": 0.6278393268585205,
+      "hypoxia_f1": 0.5579937304075235,
+      "hypoxia_csi": 0.3869565217391304
+    },
+    {
+      "lead_months": 2,
+      "model": "st_transformer",
+      "sparse": "argo",
+      "physics": false,
+      "maskview": false,
+      "blend_w_st": null,
+      "event_threshold": 195.093994140625,
+      "event_mode": "percentile_p10",
+      "rmse": 8.996942520141602,
+      "mae": 7.4934186935424805,
+      "skill_vs_persist": 0.6311904191970825,
+      "hypoxia_f1": 0.5605493133583022,
+      "hypoxia_csi": 0.38941890719861233
+    },
+    {
+      "lead_months": 2,
+      "model": "hybrid_clim_st",
+      "sparse": "argo",
+      "physics": false,
+      "maskview": false,
+      "blend_w_st": 0.0,
+      "event_threshold": 195.093994140625,
+      "event_mode": "percentile_p10",
+      "rmse": 5.227792263031006,
+      "mae": 4.137128829956055,
+      "skill_vs_persist": 0.8754771947860718,
+      "hypoxia_f1": 0.7186761229314421,
+      "hypoxia_csi": 0.5608856088560885
+    },
+    {
+      "lead_months": 3,
+      "model": "persistence",
+      "sparse": "argo",
+      "physics": false,
+      "maskview": false,
+      "blend_w_st": null,
+      "event_threshold": 195.093994140625,
+      "event_mode": "percentile_p10",
+      "rmse": 20.318735122680664,
+      "mae": 17.958730697631836,
+      "skill_vs_persist": 0.0,
+      "hypoxia_f1": 0.23523150612027674,
+      "hypoxia_csi": 0.13329312424607961
+    },
+    {
+      "lead_months": 3,
+      "model": "climatology",
+      "sparse": "argo",
+      "physics": false,
+      "maskview": false,
+      "blend_w_st": null,
+      "event_threshold": 195.093994140625,
+      "event_mode": "percentile_p10",
+      "rmse": 5.205977439880371,
+      "mae": 4.121527194976807,
+      "skill_vs_persist": 0.9343535900115967,
+      "hypoxia_f1": 0.7003329633740287,
+      "hypoxia_csi": 0.5388556789069172
+    },
+    {
+      "lead_months": 3,
+      "model": "lstm_anomaly",
+      "sparse": "argo",
+      "physics": false,
+      "maskview": false,
+      "blend_w_st": null,
+      "event_threshold": 195.093994140625,
+      "event_mode": "percentile_p10",
+      "rmse": 14.825887680053711,
+      "mae": 12.966931343078613,
+      "skill_vs_persist": 0.4675877094268799,
+      "hypoxia_f1": 0.3581560283687943,
+      "hypoxia_csi": 0.21814254859611232
+    },
+    {
+      "lead_months": 3,
+      "model": "st_transformer",
+      "sparse": "argo",
+      "physics": false,
+      "maskview": false,
+      "blend_w_st": null,
+      "event_threshold": 195.093994140625,
+      "event_mode": "percentile_p10",
+      "rmse": 14.804105758666992,
+      "mae": 12.962586402893066,
+      "skill_vs_persist": 0.46915096044540405,
+      "hypoxia_f1": 0.3524590163934426,
+      "hypoxia_csi": 0.21393034825870647
+    },
+    {
+      "lead_months": 3,
+      "model": "hybrid_clim_st",
+      "sparse": "argo",
+      "physics": false,
+      "maskview": false,
+      "blend_w_st": 0.0,
+      "event_threshold": 195.093994140625,
+      "event_mode": "percentile_p10",
+      "rmse": 5.205977439880371,
+      "mae": 4.121527194976807,
+      "skill_vs_persist": 0.9343535900115967,
+      "hypoxia_f1": 0.7003329633740287,
+      "hypoxia_csi": 0.5388556789069172
+    }
+  ],
+  "depth_rmse_lead1": {
+    "climatology": [
+      {
+        "depth_dbar": 10.0,
+        "rmse": 5.125504970550537
+      },
+      {
+        "depth_dbar": 50.0,
+        "rmse": 5.5221734046936035
+      },
+      {
+        "depth_dbar": 100.0,
+        "rmse": 5.290003776550293
+      },
+      {
+        "depth_dbar": 200.0,
+        "rmse": 5.2991108894348145
+      },
+      {
+        "depth_dbar": 500.0,
+        "rmse": 5.243041038513184
+      }
+    ],
+    "lstm_anomaly": [
+      {
+        "depth_dbar": 10.0,
+        "rmse": 5.138390064239502
+      },
+      {
+        "depth_dbar": 50.0,
+        "rmse": 5.547807216644287
+      },
+      {
+        "depth_dbar": 100.0,
+        "rmse": 5.309028148651123
+      },
+      {
+        "depth_dbar": 200.0,
+        "rmse": 5.316941738128662
+      },
+      {
+        "depth_dbar": 500.0,
+        "rmse": 5.263406753540039
+      }
+    ],
+    "st_transformer": [
+      {
+        "depth_dbar": 10.0,
+        "rmse": 5.077387809753418
+      },
+      {
+        "depth_dbar": 50.0,
+        "rmse": 5.443445682525635
+      },
+      {
+        "depth_dbar": 100.0,
+        "rmse": 5.215363502502441
+      },
+      {
+        "depth_dbar": 200.0,
+        "rmse": 5.210387706756592
+      },
+      {
+        "depth_dbar": 500.0,
+        "rmse": 5.152118682861328
+      }
+    ],
+    "hybrid_clim_st": [
+      {
+        "depth_dbar": 10.0,
+        "rmse": 5.077387809753418
+      },
+      {
+        "depth_dbar": 50.0,
+        "rmse": 5.443445682525635
+      },
+      {
+        "depth_dbar": 100.0,
+        "rmse": 5.215363502502441
+      },
+      {
+        "depth_dbar": 200.0,
+        "rmse": 5.210387706756592
+      },
+      {
+        "depth_dbar": 500.0,
+        "rmse": 5.152118682861328
+      }
+    ]
+  }
+}

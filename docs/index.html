@@ -140,27 +140,43 @@
       <h2>Why mid-range ocean DO</h2>
       <p>
         Global products like GOBAI-O2 excel at <strong>reconstruction</strong>. This project targets
-        <strong>1–3 month forecast</strong> on a shelf region, with explicit sparse-Argo stress tests
-        (station / point / block) and a hybrid climatology + spatiotemporal Transformer blend
-        that recovers skill when pure ST drifts at longer leads.
+        <strong>1–3 month forecast</strong> on a shelf region, with Mask-View sparse stress tests
+        (point / block / block-time / sensor / station / mixed / Argo), section extrapolation,
+        and multi-source drivers (WOA T/S → N², OISST, ERA5-backed wind) that do not require GOBAI access.
+        A hybrid climatology + spatiotemporal Transformer blend recovers skill when pure ST drifts at longer leads.
       </p>
     </section>
 
     <section>
-      <h2>Headline multilead (full field)</h2>
+      <h2>Headline multilead</h2>
       <table>
         <thead>
-          <tr><th>Lead (months)</th><th>Best model</th><th>RMSE</th><th>Hypoxia F1</th></tr>
+          <tr><th>Setup</th><th>Lead-1 best</th><th>Lead-2 best</th><th>Lead-3 best</th></tr>
         </thead>
         <tbody>
-          <tr><td>1</td><td><strong>st_transformer</strong></td><td><strong>3.84</strong></td><td>0.74</td></tr>
-          <tr><td>2</td><td>hybrid_clim_st (w≈0.1)</td><td>5.19</td><td>0.72</td></tr>
-          <tr><td>3</td><td>climatology / hybrid</td><td>5.21</td><td>0.70</td></tr>
+          <tr>
+            <td>O₂-only (WOA-informed)</td>
+            <td>ST 3.84</td>
+            <td>hybrid 5.19</td>
+            <td>clim 5.21</td>
+          </tr>
+          <tr>
+            <td><strong>+ physics drivers</strong></td>
+            <td>ST 3.87</td>
+            <td><strong>hybrid 5.04</strong> (ST alone 5.69 vs 8.69 without physics)</td>
+            <td>clim/hybrid ≈5.21</td>
+          </tr>
+          <tr>
+            <td>Argo/section sparse</td>
+            <td>ST ≈5.22</td>
+            <td>clim 5.23</td>
+            <td>clim 5.21</td>
+          </tr>
         </tbody>
       </table>
       <p class="note">
-        Station-sparse lead-1 ST RMSE ≈ 5.22 still beats persistence. Absolute hypoxia is rare on this cube;
-        events use adaptive P10 low-O<sub>2</sub> thresholds.
+        Physical channels (WOA T/S→N², OISST, wind) mainly lift mid-lead ST skill. Absolute hypoxia is rare;
+        events use adaptive P10 low-O<sub>2</sub> thresholds. Yellow Sea / Yangtze plume sensitivity tables are in the repo.
       </p>
     </section>
 

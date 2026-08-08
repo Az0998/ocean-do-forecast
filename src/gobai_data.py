@@ -159,13 +159,26 @@ def load_or_build_cube(
     region: dict[str, Any],
     prefer_demo: bool = False,
     cube_path: Path | None = None,
+    prefer_physics: bool = False,
 ) -> xr.Dataset:
+    """Load regional cube.
+
+    Priority:
+      1) GOBAI (unless prefer_demo)
+      2) regional_physics_cube.nc if prefer_physics
+      3) existing oxygen cube path
+      4) build demo
+    """
     cube_path = cube_path or (PROCESSED / "regional_oxygen_cube.nc")
     if not prefer_demo:
         try:
             return load_regional_cube(region)
         except FileNotFoundError:
             pass
+    if prefer_physics:
+        phys = PROCESSED / "regional_physics_cube.nc"
+        if phys.exists():
+            return xr.open_dataset(phys).load()
     if cube_path.exists():
         return xr.open_dataset(cube_path).load()
     ds = build_demo_cube(region)

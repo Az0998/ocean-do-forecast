@@ -1,8 +1,7 @@
-"""Build supervised lead-time forecast samples from a monthly oxygen cube."""
+"""Build supervised lead-time forecast samples from monthly oxygen / physics cubes."""
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -15,18 +14,24 @@ from config import HISTORY_MONTHS, LEADS_MONTHS, TRAIN_END, VAL_END
 
 @dataclass
 class ForecastArrays:
-    """x: (N, H, Z, Y, X), y: (N, L, Z, Y, X), meta times."""
+    """x: (N, H, C, Y, X), y: (N, L, Z, Y, X) oxygen targets, meta times.
+
+    Channel layout when physics enabled:
+      [oxygen depths (Z) | temp (Z) | salt (Z) | n2 (Z) | sst | wind | t2m]
+    Without physics, C == Z (oxygen only).
+    """
 
     x: np.ndarray
     y: np.ndarray
-    times: np.ndarray  # target month for lead=1
-    hist_times: np.ndarray  # last month in the history window
+    times: np.ndarray
+    hist_times: np.ndarray
     leads: list[int]
-    mask: np.ndarray  # ocean mask (Z,Y,X) or (Y,X)
+    mask: np.ndarray  # (Z,Y,X) ocean mask for oxygen
+    n_oxygen: int
+    channel_names: list[str]
 
 
 def _time_split_labels(times: pd.DatetimeIndex) -> np.ndarray:
-    """Return 0=train, 1=val, 2=test for each sample indexed by target time."""
     labels = np.zeros(len(times), dtype=np.int64)
     train_end = pd.Period(TRAIN_END, freq="M").to_timestamp()
     val_end = pd.Period(VAL_END, freq="M").to_timestamp()
@@ -41,21 +46,77 @@ def _time_split_labels(times: pd.DatetimeIndex) -> np.ndarray:
     return labels
 
 
+def _fill_nan(arr: np.ndarray) -> np.ndarray:
+    with np.errstate(all="ignore"):
+        fill = np.nanmean(arr, axis=0)
+    fill = np.where(np.isfinite(fill), fill, 0.0).astype(np.float32)
+    nan = ~np.isfinite(arr)
+    if nan.any():
+        arr = arr.copy()
+        arr[nan] = np.broadcast_to(fill, arr.shape)[nan]
+    return arr.astype(np.float32)
+
+
+def _stack_physics_channels(ds: xr.Dataset) -> tuple[np.ndarray, list[str], int]:
+    """Return field (T,C,Y,X), names, n_oxygen."""
+    oxy = ds["oxygen"].transpose("time", "depth", "lat", "lon").values.astype(np.float32)
+    t, z, y, x = oxy.shape
+    names = [f"oxygen_z{i}" for i in range(z)]
+    chunks = [oxy]
+
+    def add_vol(name: str, key: str):
+        nonlocal names
+        if key not in ds:
+            return
+        vol = ds[key].transpose("time", "depth", "lat", "lon").values.astype(np.float32)
+        chunks.append(vol)
+        names.extend([f"{name}_z{i}" for i in range(z)])
+
+    def add_surf(name: str, key: str):
+        nonlocal names
+        if key not in ds:
+            return
+        s = ds[key].transpose("time", "lat", "lon").values.astype(np.float32)
+        chunks.append(s[:, None, :, :])
+        names.append(name)
+
+    add_vol("temp", "temp")
+    add_vol("salt", "salt")
+    add_vol("n2", "n2")
+    add_surf("sst", "sst")
+    add_surf("wind", "wind_speed")
+    add_surf("t2m", "t2m")
+
+    field = np.concatenate(chunks, axis=1)  # T,C,Y,X
+    return field, names, z
+
+
 def build_forecast_arrays(
     ds: xr.Dataset,
     history: int = HISTORY_MONTHS,
     leads: list[int] | None = None,
+    use_physics: bool = False,
 ) -> ForecastArrays:
     leads = leads or LEADS_MONTHS
     oxy = ds["oxygen"].transpose("time", "depth", "lat", "lon")
-    data = oxy.values.astype(np.float32)
+    oxy_data = oxy.values.astype(np.float32)
     times = pd.to_datetime(oxy["time"].values)
-    T, Z, Y, X = data.shape
+    if use_physics and any(k in ds for k in ("temp", "salt", "sst", "wind_speed")):
+        field, channel_names, n_oxygen = _stack_physics_channels(ds)
+    else:
+        field = oxy_data  # T,Z,Y,X
+        n_oxygen = oxy_data.shape[1]
+        channel_names = [f"oxygen_z{i}" for i in range(n_oxygen)]
+
+    field = _fill_nan(field)
+    oxy_data = _fill_nan(oxy_data)
+    T, C, Y, X = field.shape
+    Z = n_oxygen
     max_lead = max(leads)
     xs, ys, t_list, h_list = [], [], [], []
     for t in range(history - 1, T - max_lead):
-        x = data[t - history + 1 : t + 1]
-        y = np.stack([data[t + lead] for lead in leads], axis=0)
+        x = field[t - history + 1 : t + 1]
+        y = np.stack([oxy_data[t + lead] for lead in leads], axis=0)
         if not np.isfinite(x).any() or not np.isfinite(y).any():
             continue
         xs.append(x)
@@ -64,21 +125,16 @@ def build_forecast_arrays(
         h_list.append(times[t])
     x_arr = np.stack(xs).astype(np.float32)
     y_arr = np.stack(ys).astype(np.float32)
-    # fill nan with per-depth mean for model stability; keep mask
-    mask = np.isfinite(data).any(axis=0)  # Z,Y,X
-    fill = np.nanmean(data, axis=0)
-    fill = np.where(np.isfinite(fill), fill, 0.0).astype(np.float32)
-    for arr in (x_arr, y_arr):
-        nan = ~np.isfinite(arr)
-        if nan.any():
-            arr[nan] = np.broadcast_to(fill, arr.shape)[nan]
+    mask = np.isfinite(oxy.values).any(axis=0).astype(np.float32)  # Z,Y,X
     return ForecastArrays(
         x=x_arr,
         y=y_arr,
         times=np.array(t_list),
         hist_times=np.array(h_list),
         leads=list(leads),
-        mask=mask.astype(np.float32),
+        mask=mask,
+        n_oxygen=Z,
+        channel_names=channel_names,
     )
 
 
@@ -93,7 +149,12 @@ def split_arrays(fa: ForecastArrays) -> dict[str, dict[str, np.ndarray]]:
             "times": fa.times[idx],
             "hist_times": fa.hist_times[idx],
         }
-    out["meta"] = {"leads": fa.leads, "mask": fa.mask}
+    out["meta"] = {
+        "leads": fa.leads,
+        "mask": fa.mask,
+        "n_oxygen": fa.n_oxygen,
+        "channel_names": fa.channel_names,
+    }
     return out
 
 
@@ -106,12 +167,9 @@ class OxygenForecastDataset(Dataset):
         return self.x.shape[0]
 
     def __getitem__(self, i: int):
-        # flatten spatial for LSTM path: (H, Z*Y*X)
-        x = self.x[i]
-        y = self.y[i]
-        return x, y
+        return self.x[i], self.y[i]
 
 
 def flatten_space(x: torch.Tensor) -> torch.Tensor:
-    """(B,H,Z,Y,X) -> (B,H,F) or (H,Z,Y,X)->(H,F)."""
+    """(B,H,C,Y,X) -> (B,H,F)."""
     return x.reshape(*x.shape[:-3], -1)

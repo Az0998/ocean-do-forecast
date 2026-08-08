@@ -18,6 +18,15 @@ candidates:
     depth_max_m: 100
     rationale: Seasonal hypoxia; shallow — may be sparse in GOBAI/Argo-O2.
 
+  yangtze_estuary:
+    name: Yangtze River estuary / plume
+    lon_min: 121.0
+    lon_max: 125.0
+    lat_min: 30.0
+    lat_max: 33.0
+    depth_max_m: 100
+    rationale: River–shelf hypoxia hot spot; section-extrapolation narrative.
+
   northern_south_china_sea:
     name: Northern South China Sea
     lon_min: 110.0

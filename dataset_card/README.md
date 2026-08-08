@@ -1,40 +1,52 @@
 # Dataset card — Ocean-DO-Forecast
 
-## 模式
+## Modes
 
-| 模式 | 路径 | 用途 |
-|------|------|------|
-| **demo** | `build_demo_cube.py` → `regional_oxygen_cube.nc` | 纯合成冒烟 |
-| **woa_informed** | WOA18 区域气候态 + 合成距平 | 半真实方法调试（当前默认立方体） |
-| **woa18_annual** | `processed/woa18_oxygen_region.nc` | 真实气候态结构/掩膜 |
-| **gobai** | `data/raw/gobai/*.nc` + `subset_gobai.py` | 正式论文主结果 |
+| Mode | Path | Use |
+|------|------|-----|
+| **demo** | `build_demo_cube.py` → `regional_oxygen_cube.nc` | Synthetic smoke tests |
+| **woa_informed** | WOA18 O₂ clim + synthetic anomalies | Semi-real method development (default O₂ target) |
+| **physics_multidrive** | `regional_physics_cube.nc` | O₂ + T/S/N² + SST + wind channels |
+| **woa18_annual** | `woa18_oxygen_region.nc` / `woa18_ts_region.nc` | Real clim structure |
+| **gobai** (optional) | `data/raw/gobai/*.nc` | Time-varying O₂ if locally available |
 
-## GOBAI-O2（正式）
+## Physical drivers (no GOBAI / no CMEMS login)
 
-- DOI: https://doi.org/10.25921/z72m-yz67
-- 文献: Sharp et al., ESSD 2023
-- 分辨率: 1° × 1° × 月 × 58 层
-- 引用: 见项目 README
+| Variable | Source | Script |
+|----------|--------|--------|
+| Temperature / salinity | WOA18 annual (NCEI) | `scripts/download_woa_ts.py` |
+| Stratification N² | Linear EOS from T–S | `src/stratification.py` |
+| SST | NOAA OISST v2 monthly (PSL) | `scripts/download_oisst_monthly.py` |
+| 10 m wind / t2m | Open-Meteo ERA5 archive (or `--offline-synth`) | `scripts/download_openmeteo_wind.py` |
+| Merge | Same grid as oxygen cube | `scripts/build_physics_cube.py` |
 
-导入：
+Optional upgrades (token required later): CDS ERA5 grids, CMEMS GLORYS via `copernicusmarine`.
 
-```bash
-python scripts/download_gobai.py --from-file /path/to/gobai_file.nc
-```
+## Sparse observation assets
 
-## Demo 立方体
+| Asset | Path | Script |
+|-------|------|--------|
+| Argo / section columns | `data/processed/argo_stations.json` | `scripts/fetch_argo_stations.py` |
+| Mask-View patterns | point, block, block_time, sensor, station, mixed, argo | `src/sparse_mask.py` |
 
-由 `src/gobai_data.build_demo_cube` 生成：季节循环 + 深度衰减 + 近岸夏季低氧 + 弱年际趋势。  
-attrs 含 `source=demo`。
+## Splits
 
-## 切分
-
-- Train: ≤ 2018-12
-- Val: 2019-01 … 2020-12
+- Train: ≤ 2018-12  
+- Val: 2019-01 … 2020-12  
 - Test: ≥ 2021-01  
-按目标月时间块切分，禁止随机剖面打乱。
 
-## 区域
+Time-block split by target month (no random profile shuffle).
 
-由 `scripts/survey_argo_coverage.py --freeze` 写入 `configs/region.yaml`。  
-默认候选见 `configs/regions.yaml`。
+## Regions
+
+Frozen active region: `configs/region.yaml` (default East China Sea shelf).  
+Candidates: `configs/regions.yaml` (Yellow Sea, Yangtze estuary, …).  
+Sensitivity runner: `scripts/run_region_sensitivity.py`.
+
+## Citations
+
+- Garcia et al., World Ocean Atlas 2018.  
+- Reynolds / NOAA OISST.  
+- Open-Meteo (ERA5-based archive).  
+- Argovis (Argo profile API).  
+- Sharp et al. (2023) GOBAI-O2 — optional only.

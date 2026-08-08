@@ -1,0 +1,9 @@
+{
+  "region": "east_china_sea_shelf",
+  "lead_months": 1,
+  "physics": true,
+  "test_rmse": 3.8960940837860107,
+  "pred_mean": 217.4845428466797,
+  "true_mean": 217.1350555419922,
+  "n_test": 22
+}

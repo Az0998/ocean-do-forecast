@@ -1,0 +1,155 @@
+{
+  "region_id": "east_china_sea_shelf",
+  "source": "offline_yangtze_section",
+  "fetched_at": "2026-08-08T07:02:25.933536Z",
+  "n_stations": 12,
+  "stations": [
+    {
+      "id": "section_0",
+      "lon": 122.0,
+      "lat": 31.5,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_1",
+      "lon": 122.4,
+      "lat": 31.45,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_2",
+      "lon": 122.8,
+      "lat": 31.4,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_3",
+      "lon": 123.2,
+      "lat": 31.35,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_4",
+      "lon": 123.6,
+      "lat": 31.3,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_5",
+      "lon": 124.0,
+      "lat": 31.25,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_6",
+      "lon": 124.4,
+      "lat": 31.2,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_7",
+      "lon": 124.8,
+      "lat": 31.15,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_8",
+      "lon": 125.2,
+      "lat": 31.1,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_9",
+      "lon": 125.6,
+      "lat": 31.05,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_10",
+      "lon": 126.0,
+      "lat": 31.0,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_11",
+      "lon": 126.4,
+      "lat": 30.95,
+      "kind": "ship_section"
+    }
+  ],
+  "section": [
+    {
+      "id": "section_0",
+      "lon": 122.0,
+      "lat": 31.5,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_1",
+      "lon": 122.4,
+      "lat": 31.45,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_2",
+      "lon": 122.8,
+      "lat": 31.4,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_3",
+      "lon": 123.2,
+      "lat": 31.35,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_4",
+      "lon": 123.6,
+      "lat": 31.3,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_5",
+      "lon": 124.0,
+      "lat": 31.25,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_6",
+      "lon": 124.4,
+      "lat": 31.2,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_7",
+      "lon": 124.8,
+      "lat": 31.15,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_8",
+      "lon": 125.2,
+      "lat": 31.1,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_9",
+      "lon": 125.6,
+      "lat": 31.05,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_10",
+      "lon": 126.0,
+      "lat": 31.0,
+      "kind": "ship_section"
+    },
+    {
+      "id": "section_11",
+      "lon": 126.4,
+      "lat": 30.95,
+      "kind": "ship_section"
+    }
+  ],
+  "note": "Used for --sparse argo masks and section-extrapolation narratives."
+}

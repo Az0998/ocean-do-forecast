@@ -24,7 +24,9 @@ def train_lstm_anom(
     x_va_f = flatten_space(torch.from_numpy(x_va)).numpy()
     y_tr_f = y_tr.reshape(len(y_tr), -1)
     y_va_f = y_va.reshape(len(y_va), -1)
-    model = LSTMForecast(x_tr_f.shape[-1], hidden=HIDDEN).to(device)
+    model = LSTMForecast(
+        in_dim=x_tr_f.shape[-1], out_dim=y_tr_f.shape[-1], hidden=HIDDEN
+    ).to(device)
     opt = torch.optim.Adam(model.parameters(), lr=LR)
     loader = DataLoader(
         TensorDataset(torch.from_numpy(x_tr_f), torch.from_numpy(y_tr_f)),
@@ -69,10 +71,18 @@ def train_st_anom(
     device: str,
     epochs: int,
     use_physics: bool = True,
+    n_oxygen: int | None = None,
+    multiview: bool = False,
+    view_patterns: list[str] | None = None,
 ) -> STTransformerForecast:
-    n_depth = x_tr.shape[2]
+    n_in = x_tr.shape[2]
+    n_oxygen = n_oxygen if n_oxygen is not None else n_in
     model = STTransformerForecast(
-        n_depth=n_depth, hidden=HIDDEN, n_heads=N_HEADS, n_layers=N_LAYERS
+        n_in=n_in,
+        n_oxygen=n_oxygen,
+        hidden=HIDDEN,
+        n_heads=N_HEADS,
+        n_layers=N_LAYERS,
     ).to(device)
     opt = torch.optim.Adam(model.parameters(), lr=LR)
     loader = DataLoader(
@@ -82,7 +92,9 @@ def train_st_anom(
     )
     mask_t = torch.from_numpy(mask).to(device)
     best, best_val = None, float("inf")
-    for _ in range(epochs):
+    views = view_patterns or ["point", "block", "station", "sensor"]
+
+    for ep in range(epochs):
         model.train()
         for x, y in loader:
             x, y = x.to(device), y.to(device)
@@ -91,6 +103,24 @@ def train_st_anom(
                 loss = physics_residual_loss(pred, y, mask_t, lambda_smooth=0.01)
             else:
                 loss = torch.mean((pred - y) ** 2)
+
+            if multiview:
+                # Mask-View: complementary input views + consistency on predictions
+                from src.sparse_mask import apply_mask, make_batch_masks
+
+                xb = x.detach().cpu().numpy()
+                preds_v = []
+                for vi, pat in enumerate(views[:2]):
+                    m = make_batch_masks(
+                        xb, pat, keep_ratio=0.3, n_stations=6, seed=ep * 17 + vi, n_oxygen=n_oxygen
+                    )
+                    xv = apply_mask(xb, m)
+                    pv = model(torch.from_numpy(xv).to(device))
+                    preds_v.append(pv)
+                    loss = loss + 0.5 * torch.mean((pv - y) ** 2)
+                if len(preds_v) == 2:
+                    loss = loss + 0.1 * torch.mean((preds_v[0] - preds_v[1]) ** 2)
+
             opt.zero_grad()
             loss.backward()
             opt.step()

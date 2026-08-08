@@ -9,9 +9,12 @@ import pandas as pd
 
 @dataclass
 class NormStats:
-    clim: dict[int, np.ndarray]  # month -> (Z,Y,X)
-    mean: np.ndarray  # (Z,Y,X)
+    clim: dict[int, np.ndarray]  # month -> (Z,Y,X) oxygen clim
+    mean: np.ndarray  # (Z,Y,X) oxygen anomaly mean
     std: np.ndarray
+    # optional physics channel stats on raw history channels beyond oxygen
+    phys_mean: np.ndarray | None = None  # (C_phys, Y, X)
+    phys_std: np.ndarray | None = None
 
 
 def month_climatology(fields: np.ndarray, times: np.ndarray) -> dict[int, np.ndarray]:
@@ -46,6 +49,17 @@ def fit_norm_from_train(y_train: np.ndarray, times_train: np.ndarray) -> NormSta
     return NormStats(clim=clim, mean=mean, std=std)
 
 
+def fit_phys_channel_stats(x_train: np.ndarray, n_oxygen: int) -> tuple[np.ndarray, np.ndarray]:
+    """x_train: (N,H,C,Y,X). Stats over N,H for channels after oxygen."""
+    phys = x_train[:, :, n_oxygen:, :, :]
+    if phys.shape[2] == 0:
+        return np.zeros((0, 1, 1), dtype=np.float32), np.ones((0, 1, 1), dtype=np.float32)
+    mean = np.nanmean(phys, axis=(0, 1)).astype(np.float32)
+    std = np.nanstd(phys, axis=(0, 1)).astype(np.float32)
+    std = np.where(std < 1e-6, 1.0, std)
+    return mean, std
+
+
 def normalize_anom(anom: np.ndarray, stats: NormStats) -> np.ndarray:
     return (anom - stats.mean) / stats.std
 
@@ -55,13 +69,20 @@ def denormalize_anom(normed: np.ndarray, stats: NormStats) -> np.ndarray:
 
 
 def history_to_norm_anom(
-    x: np.ndarray, times_last: np.ndarray, stats: NormStats, history: int
+    x: np.ndarray,
+    times_last: np.ndarray,
+    stats: NormStats,
+    history: int,
+    n_oxygen: int | None = None,
 ) -> np.ndarray:
-    """Convert history cube (N,H,Z,Y,X) to normalized anomalies using month of each step."""
-    n, h = x.shape[:2]
+    """Convert history cube (N,H,C,Y,X) to normalized features.
+
+    Oxygen channels: month-of-year anomaly + z-score.
+    Extra physics channels: z-score with phys_mean/std (or identity if absent).
+    """
+    n, h, c, y, w = x.shape
+    n_oxygen = n_oxygen if n_oxygen is not None else min(c, stats.mean.shape[0])
     out = np.empty_like(x)
-    # reconstruct timestamps for each history step from target-associated last month
-    # times_last here is the last history month time (same as sample time index t)
     for i in range(n):
         end = pd.Timestamp(times_last[i])
         for k in range(h):
@@ -69,7 +90,14 @@ def history_to_norm_anom(
             month = t.month
             clim = stats.clim.get(month)
             if clim is None:
-                clim = stats.mean * 0  # unlikely
-            anom = x[i, k] - clim
-            out[i, k] = (anom - stats.mean) / stats.std
+                clim = stats.mean * 0
+            oxy = x[i, k, :n_oxygen]
+            anom = oxy - clim
+            out[i, k, :n_oxygen] = (anom - stats.mean) / stats.std
+            if c > n_oxygen:
+                phys = x[i, k, n_oxygen:]
+                if stats.phys_mean is not None and stats.phys_std is not None:
+                    out[i, k, n_oxygen:] = (phys - stats.phys_mean) / stats.phys_std
+                else:
+                    out[i, k, n_oxygen:] = phys
     return out.astype(np.float32)
