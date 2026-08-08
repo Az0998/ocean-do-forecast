@@ -1,0 +1,11 @@
+{
+  "model": "st_transformer_anomaly",
+  "physics": true,
+  "rmse": 3.1722781658172607,
+  "mae": 2.5329809188842773,
+  "skill_vs_persist": 0.828609824180603,
+  "hypoxia_f1": 0.9443641618497111,
+  "hypoxia_csi": 0.894592744695414,
+  "region": "east_china_sea_shelf",
+  "cube_source": "demo"
+}

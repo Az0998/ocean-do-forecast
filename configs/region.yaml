@@ -1,0 +1,19 @@
+name: East China Sea shelf
+lon_min: 118.0
+lon_max: 128.0
+lat_min: 26.0
+lat_max: 35.0
+depth_max_m: 500
+rationale: Hypoxia / fishery relevance; shelf deoxygenation narrative.
+id: east_china_sea_shelf
+leads_days:
+- 30
+- 60
+- 90
+hypoxia_threshold_umol_kg: 60.0
+frozen_from_survey: true
+survey_score: 77.625
+note: Frozen for hypoxia narrative; denser regions kept as sensitivity sites.
+sensitivity_regions:
+- kuroshio_extension
+- northern_south_china_sea

@@ -1,0 +1,31 @@
+{
+  "region": "east_china_sea_shelf",
+  "cube_source": "demo",
+  "lead_months": 1,
+  "metrics": [
+    {
+      "model": "persistence",
+      "rmse": 7.6626386642456055,
+      "mae": 6.259565353393555,
+      "skill_vs_persist": 0.0,
+      "hypoxia_f1": 0.8798283261802575,
+      "hypoxia_csi": 0.7854406130268199
+    },
+    {
+      "model": "climatology",
+      "rmse": 3.4865477085113525,
+      "mae": 2.7939255237579346,
+      "skill_vs_persist": 0.7929694056510925,
+      "hypoxia_f1": 0.937037037037037,
+      "hypoxia_csi": 0.8815331010452961
+    },
+    {
+      "model": "lstm_anomaly",
+      "rmse": 3.263120174407959,
+      "mae": 2.6073663234710693,
+      "skill_vs_persist": 0.818653404712677,
+      "hypoxia_f1": 0.9401896425966447,
+      "hypoxia_csi": 0.887130075705437
+    }
+  ]
+}

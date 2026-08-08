@@ -1,0 +1,37 @@
+# Candidate study regions for Argo-O2 coverage survey & forecast experiments.
+candidates:
+  east_china_sea_shelf:
+    name: East China Sea shelf
+    lon_min: 118.0
+    lon_max: 128.0
+    lat_min: 26.0
+    lat_max: 35.0
+    depth_max_m: 500
+    rationale: Hypoxia / fishery relevance; shelf deoxygenation narrative.
+
+  yellow_sea:
+    name: Yellow Sea
+    lon_min: 119.0
+    lon_max: 126.5
+    lat_min: 32.0
+    lat_max: 39.0
+    depth_max_m: 100
+    rationale: Seasonal hypoxia; shallow — may be sparse in GOBAI/Argo-O2.
+
+  northern_south_china_sea:
+    name: Northern South China Sea
+    lon_min: 110.0
+    lon_max: 120.0
+    lat_min: 15.0
+    lat_max: 23.0
+    depth_max_m: 1000
+    rationale: Stratification / monsoon; potential OMZ influence at depth.
+
+  kuroshio_extension:
+    name: Kuroshio Extension
+    lon_min: 140.0
+    lon_max: 160.0
+    lat_min: 30.0
+    lat_max: 40.0
+    depth_max_m: 1000
+    rationale: Dynamically clear; denser Argo; weaker hypoxia story.

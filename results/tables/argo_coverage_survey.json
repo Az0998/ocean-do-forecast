@@ -1,0 +1,181 @@
+{
+  "east_china_sea_shelf": {
+    "summary": {
+      "n_profiles": 151,
+      "n_oxygen_like": 81,
+      "n_platforms": 0,
+      "year_counts": {
+        "2020": 70,
+        "2021": 3,
+        "2022": 78
+      },
+      "month_counts": {
+        "1": 41,
+        "2": 59,
+        "3": 3,
+        "5": 1,
+        "6": 5,
+        "7": 5,
+        "8": 5,
+        "9": 1,
+        "10": 2,
+        "11": 8,
+        "12": 21
+      },
+      "lon_range": [
+        123.003,
+        127.9951
+      ],
+      "lat_range": [
+        26.0057,
+        34.946
+      ]
+    },
+    "score": 77.625,
+    "region": {
+      "name": "East China Sea shelf",
+      "lon_min": 118.0,
+      "lon_max": 128.0,
+      "lat_min": 26.0,
+      "lat_max": 35.0,
+      "depth_max_m": 500,
+      "rationale": "Hypoxia / fishery relevance; shelf deoxygenation narrative.",
+      "id": "east_china_sea_shelf"
+    }
+  },
+  "yellow_sea": {
+    "summary": {
+      "n_profiles": 435,
+      "n_oxygen_like": 5,
+      "n_platforms": 0,
+      "year_counts": {
+        "2020": 234,
+        "2021": 5,
+        "2022": 196
+      },
+      "month_counts": {
+        "1": 46,
+        "2": 41,
+        "3": 47,
+        "4": 45,
+        "5": 45,
+        "6": 42,
+        "7": 37,
+        "8": 16,
+        "9": 15,
+        "10": 15,
+        "11": 40,
+        "12": 46
+      },
+      "lon_range": [
+        122.447,
+        126.493
+      ],
+      "lat_range": [
+        32.063,
+        37.029
+      ]
+    },
+    "score": 5.0,
+    "region": {
+      "name": "Yellow Sea",
+      "lon_min": 119.0,
+      "lon_max": 126.5,
+      "lat_min": 32.0,
+      "lat_max": 39.0,
+      "depth_max_m": 100,
+      "rationale": "Seasonal hypoxia; shallow \u2014 may be sparse in GOBAI/Argo-O2.",
+      "id": "yellow_sea"
+    }
+  },
+  "northern_south_china_sea": {
+    "summary": {
+      "n_profiles": 375,
+      "n_oxygen_like": 375,
+      "n_platforms": 0,
+      "year_counts": {
+        "2020": 104,
+        "2021": 247,
+        "2022": 24
+      },
+      "month_counts": {
+        "1": 18,
+        "2": 19,
+        "3": 24,
+        "4": 24,
+        "5": 17,
+        "6": 17,
+        "7": 28,
+        "8": 34,
+        "9": 38,
+        "10": 46,
+        "11": 55,
+        "12": 55
+      },
+      "lon_range": [
+        114.154,
+        119.989
+      ],
+      "lat_range": [
+        16.93,
+        21.26
+      ]
+    },
+    "score": 375.0,
+    "region": {
+      "name": "Northern South China Sea",
+      "lon_min": 110.0,
+      "lon_max": 120.0,
+      "lat_min": 15.0,
+      "lat_max": 23.0,
+      "depth_max_m": 1000,
+      "rationale": "Stratification / monsoon; potential OMZ influence at depth.",
+      "id": "northern_south_china_sea"
+    }
+  },
+  "kuroshio_extension": {
+    "summary": {
+      "n_profiles": 3290,
+      "n_oxygen_like": 1116,
+      "n_platforms": 0,
+      "year_counts": {
+        "2020": 2189,
+        "2021": 622,
+        "2022": 479
+      },
+      "month_counts": {
+        "1": 240,
+        "2": 237,
+        "3": 280,
+        "4": 263,
+        "5": 291,
+        "6": 316,
+        "7": 384,
+        "8": 380,
+        "9": 248,
+        "10": 239,
+        "11": 221,
+        "12": 191
+      },
+      "lon_range": [
+        140.009,
+        159.9956
+      ],
+      "lat_range": [
+        30.0019,
+        39.996
+      ]
+    },
+    "score": 1116.0,
+    "region": {
+      "name": "Kuroshio Extension",
+      "lon_min": 140.0,
+      "lon_max": 160.0,
+      "lat_min": 30.0,
+      "lat_max": 40.0,
+      "depth_max_m": 1000,
+      "rationale": "Dynamically clear; denser Argo; weaker hypoxia story.",
+      "id": "kuroshio_extension"
+    }
+  }
+}
