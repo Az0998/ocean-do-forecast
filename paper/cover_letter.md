@@ -1,25 +1,27 @@
-# Cover letter draft — AIES / Ocean Modelling
+# Cover letter — AIES
 
 **Subject:** Submission — Spatiotemporal forecasting of dissolved oxygen on the East China Sea shelf under sparse observations
 
 Dear Editor,
 
-We submit a manuscript on **multi-month dissolved oxygen (DO) forecasting** for the East China Sea shelf. Unlike recent ML products that **reconstruct** monthly oxygen maps from sparse observations (e.g., GOBAI-O2), we target **1–3 month leads** that are more relevant to hypoxia risk awareness.
+We submit a manuscript on **multi-month dissolved oxygen (DO) forecasting** for the East China Sea shelf. Unlike recent machine-learning products that **reconstruct** monthly oxygen maps from sparse observations (e.g., GOBAI-O2), we target **1–3 month leads** with an evaluation protocol that keeps the task a full-field forecast under Mask-View / Argo-like missingness.
 
-**Why this journal.** The work centers on an AI method (spatiotemporal Transformer + validation-tuned climatology hybrid + Mask-View sparse training) with Earth-system evaluation (lead skill, low-oxygen events, depth profiles, Argo/section sparsity, multi-region sensitivity) and a fully reproducible pipeline that runs without proprietary BGC reanalyses—using WOA T/S, OISST, and ERA5-backed winds as free physical drivers.
+**Why AIES.** The work centers on an Earth-system AI method—spatiotemporal Transformer, validation-tuned climatology hybrid, and Mask-View sparse training—with lead skill, low-oxygen events, seasonal scores, bootstrap uncertainty, multi-region subsets, and a fully reproducible open pipeline that runs with free physical drivers (WOA T/S, OISST, Open-Meteo/ERA5-backed wind).
 
-**Main findings (method-development cube; physics drivers optional).**
-1. At 1-month lead, the Transformer reduces RMSE versus persistence and climatology and improves low-O₂ event F1.
-2. At 2–3 month leads, seasonal climatology dominates; a hybrid clim–ST blend recovers near-climatology RMSE while retaining short-lead anomaly skill.
-3. Under station-sparse and section-extrapolation inputs, the task remains a **full-field forecast**, not dense reconstruction; one-month skill degrades but stays above persistence.
-4. Multi-region checks (Yellow Sea, Yangtze plume) and Mask-View pattern banks stress-test transfer of the sparse-obs narrative.
+**Main findings.**
+1. At one-month lead, the Transformer reduces RMSE versus persistence and climatology (3.84 µmol kg⁻¹; skill vs persistence 0.78) and improves low-oxygen event F1 (0.74) on a WOA-informed development cube.
+2. Physical drivers mainly lift mid-lead Transformer skill; a hybrid clim–ST blend is best at two months (RMSE 5.08 with real wind).
+3. Under station/Argo column masks, lead-1 skill degrades (RMSE ≈5.23–5.24) but remains above persistence; section extrapolation yields a full-field forecast from transect-limited oxygen.
+4. Residual errors concentrate on the western shelf and near 50 dbar; we do **not** over-claim frontal failure pending time-varying oxygen targets (GOBAI-O2).
 
-Code, project site, and intermediate products are public; a DOI will be minted upon acceptance. We confirm the manuscript is original and not under review elsewhere.
+**Transparency.** Primary tables use a clearly labeled method-development oxygen target; Limitations state what must be repeated on GOBAI-O2. Code, tables and an interactive lead-1 demo are public; a Zenodo DOI will be minted at submission/acceptance. The manuscript is original and not under review elsewhere.
 
 Sincerely,  
-Senjie Zhang (张森捷) and co-authors
+Senjie Zhang (张森捷)  
+Lanzhou University  
+[email]
 
-**Suggested reviewers (placeholders):**  
+**Suggested reviewers (to be named):**  
 1. Ocean biogeochemical ML / Argo-O2 specialist  
 2. Coastal hypoxia forecasting specialist  
-3. Spatiotemporal Earth-system AI specialist  
+3. Spatiotemporal Earth-system AI specialist

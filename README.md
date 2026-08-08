@@ -18,7 +18,7 @@
 | 断面外推 / 多区域敏感性 | ✅ demo + physics 子集（黄海/长江口） |
 | Mask-View 全模式消融 | ✅ `run_maskview_ablation.py` |
 | 季节技巧 + bootstrap CI | ✅ `run_multilead.py` 输出 |
-| 手稿（英）/ Cover letter / 组合图 | ✅ `paper/` · `aies_comparison_plate.png` |
+| 手稿最终稿（英）/ Cover letter | ✅ `paper/manuscript_final.md` · `cover_letter.md` |
 | Forecast product NetCDF + Web Demo | ✅ `export_forecast_product` · [`docs/demo.html`](https://az0998.github.io/ocean-do-forecast/demo.html) |
 | 失败模态（沿岸 / 跃层） | ✅ `eval_failure_modes.py` |
 | GOBAI 真时变氧 | ⬜ NCEI 手动下载后 `--from-file`（自动拉取常超时） |
