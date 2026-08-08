@@ -113,11 +113,11 @@ Validation-tuned hybrid weights: \(w=1.0\) (lead 1), \(0.1\) (lead 2), \(0.0\) (
 | 1 | **ST / hybrid** | **3.842** | **0.784** | **0.465** | **0.743** | **0.591** |
 | 2 | persistence | 14.815 | 0.000 | −7.031 | 0.357 | 0.217 |
 | 2 | climatology | 5.228 | 0.875 | 0.000 | 0.719 | 0.561 |
-| 2 | LSTM | 9.685 | 0.573 | − | 0.523 | 0.354 |
-| 2 | ST | 8.694 | 0.656 | − | 0.596 | 0.424 |
+| 2 | LSTM | 9.685 | 0.573 | −2.43 | 0.523 | 0.354 |
+| 2 | ST | 8.694 | 0.656 | −1.76 | 0.596 | 0.424 |
 | 2 | **hybrid** | **5.191** | **0.877** | **0.014** | 0.718 | 0.560 |
 | 3 | climatology / hybrid | **5.206** | **0.934** | 0.000 | 0.700 | 0.539 |
-| 3 | ST | 14.752 | 0.473 | − | 0.372 | 0.229 |
+| 3 | ST | 14.752 | 0.473 | −7.03 | 0.372 | 0.229 |
 
 At one month the Transformer clearly beats both persistence and climatology. At two and three months, pure ST degrades; hybrid (or pure climatology at lead 3) recovers usable scores by shrinking \(w\).
 
