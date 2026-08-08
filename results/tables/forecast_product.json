@@ -1,0 +1,11 @@
+{
+  "region": "east_china_sea_shelf",
+  "init_time": "2022-12-01",
+  "valid_time": "2023-01-01",
+  "lead_months": 1,
+  "physics": true,
+  "test_rmse_holdout": 3.896226167678833,
+  "pred_mean": 201.6263885498047,
+  "clim_mean": 202.6402130126953,
+  "path": "results/products/forecast_lead1_latest.nc"
+}

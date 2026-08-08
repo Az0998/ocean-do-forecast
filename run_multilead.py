@@ -29,7 +29,16 @@ from config import (
 )
 from src.gobai_data import load_or_build_cube
 from src.hybrid import blend, depth_rmse_profile, tune_blend_weight
-from src.metrics import binary_event_scores, choose_event_threshold, skill_vs_persistence
+from src.metrics import (
+    anomaly_rmse,
+    binary_event_scores,
+    bootstrap_metric,
+    choose_event_threshold,
+    rmse,
+    seasonal_scores,
+    skill_vs_persistence,
+    skill_vs_reference,
+)
 from src.models.baselines import (
     climatology_predict,
     evaluate_regression,
@@ -104,9 +113,16 @@ def main():
         help="Train ST with Mask-View multi-view reconstruction + consistency",
     )
     parser.add_argument("--tag", default="", help="Optional results filename tag suffix")
+    parser.add_argument(
+        "--bootstrap",
+        type=int,
+        default=200,
+        help="Block-bootstrap replicates for ST/hybrid CI (0 disables)",
+    )
     args = parser.parse_args()
     if args.quick:
         args.epochs = min(args.epochs, 8)
+        args.bootstrap = min(args.bootstrap, 80) if args.bootstrap else 0
 
     set_seed()
     ensure_dirs()
@@ -154,6 +170,8 @@ def main():
         "hybrid_clim_st",
     ]
     rows = []
+    seasonal_rows = []
+    bootstrap_rows = []
     skill_series = {k: [] for k in model_names}
     rmse_series = {k: [] for k in model_names}
     f1_series = {k: [] for k in model_names}
@@ -257,6 +275,8 @@ def main():
         for name, pred in preds.items():
             reg = evaluate_regression(y_te, pred, mask)
             skill = skill_vs_persistence(y_te, pred, persist)
+            skill_clim = skill_vs_reference(y_te, pred, clim)
+            a_rmse = anomaly_rmse(y_te, pred, clim)
             ev = binary_event_scores(y_te, pred, event_thr)
             row = {
                 "lead_months": lead,
@@ -268,7 +288,9 @@ def main():
                 "event_threshold": event_thr,
                 "event_mode": event_mode,
                 **reg,
+                "anom_rmse": a_rmse,
                 "skill_vs_persist": skill,
+                "skill_vs_clim": skill_clim,
                 "hypoxia_f1": ev["f1"],
                 "hypoxia_csi": ev["csi"],
             }
@@ -277,8 +299,54 @@ def main():
             rmse_series[name].append(reg["rmse"])
             f1_series[name].append(ev["f1"])
             print(
-                f"  {name:16s} rmse={reg['rmse']:.3f} skill={skill:.3f} f1={ev['f1']:.3f}"
+                f"  {name:16s} rmse={reg['rmse']:.3f} anom={a_rmse:.3f} "
+                f"skillP={skill:.3f} skillC={skill_clim:.3f} f1={ev['f1']:.3f}"
             )
+
+            seas = seasonal_scores(
+                y_te, pred, persist, clim, t_te, event_thr
+            )
+            for season, sc in seas.items():
+                seasonal_rows.append(
+                    {
+                        "lead_months": lead,
+                        "model": name,
+                        "season": season,
+                        **sc,
+                    }
+                )
+
+        if args.bootstrap > 0:
+            for name in ("st_transformer", "hybrid_clim_st", "climatology"):
+                pred = preds[name]
+                boot_rmse = bootstrap_metric(
+                    y_te, pred, rmse, n_boot=args.bootstrap, seed=SEED + lead
+                )
+                boot_f1 = bootstrap_metric(
+                    y_te,
+                    pred,
+                    lambda a, b, thr=event_thr: binary_event_scores(a, b, thr)["f1"],
+                    n_boot=args.bootstrap,
+                    seed=SEED + 17 + lead,
+                )
+                bootstrap_rows.append(
+                    {
+                        "lead_months": lead,
+                        "model": name,
+                        "rmse_mean": boot_rmse["mean"],
+                        "rmse_p05": boot_rmse["p05"],
+                        "rmse_p95": boot_rmse["p95"],
+                        "f1_mean": boot_f1["mean"],
+                        "f1_p05": boot_f1["p05"],
+                        "f1_p95": boot_f1["p95"],
+                        "n_boot": args.bootstrap,
+                    }
+                )
+                print(
+                    f"  boot[{name}] rmse={boot_rmse['p50']:.3f} "
+                    f"[{boot_rmse['p05']:.3f},{boot_rmse['p95']:.3f}] "
+                    f"f1={boot_f1['p50']:.3f} [{boot_f1['p05']:.3f},{boot_f1['p95']:.3f}]"
+                )
 
         st_maps[lead] = depth_mean_rmse(y_te, pred_hyb if w < 1 else pred_st)
         if lead == 1:
@@ -306,6 +374,8 @@ def main():
         "epochs": args.epochs,
         "blend_weights": blend_weights,
         "metrics": rows,
+        "seasonal": seasonal_rows,
+        "bootstrap": bootstrap_rows,
         "depth_rmse_lead1": depth_profiles_lead1,
     }
     json_path = TABLES / f"multilead_{tag}.json"
@@ -322,14 +392,54 @@ def main():
         "",
         f"Hybrid blend weights (val-tuned ST weight): `{blend_weights}`",
         "",
-        "| Lead (mo) | Model | RMSE | Skill vs persist | Hypoxia F1 | CSI |",
-        "|---:|---|---:|---:|---:|---:|",
+        "| Lead (mo) | Model | RMSE | Anom RMSE | Skill vs persist | Skill vs clim | Hypoxia F1 | CSI |",
+        "|---:|---|---:|---:|---:|---:|---:|---:|",
     ]
     for r in rows:
         lines.append(
             f"| {r['lead_months']} | {r['model']} | {r['rmse']:.3f} | "
-            f"{r['skill_vs_persist']:.3f} | {r['hypoxia_f1']:.3f} | {r['hypoxia_csi']:.3f} |"
+            f"{r['anom_rmse']:.3f} | {r['skill_vs_persist']:.3f} | "
+            f"{r['skill_vs_clim']:.3f} | {r['hypoxia_f1']:.3f} | {r['hypoxia_csi']:.3f} |"
         )
+
+    # Seasonal focus: ST / hybrid / clim at lead 1
+    focus = [
+        s
+        for s in seasonal_rows
+        if s["lead_months"] == 1
+        and s["model"] in ("st_transformer", "hybrid_clim_st", "climatology")
+        and s["season"] in ("JJAS", "DJF", "annual")
+    ]
+    if focus:
+        lines += [
+            "",
+            "## Seasonal skill (lead = 1 month)",
+            "",
+            "| Season | Model | N | RMSE | Anom RMSE | SkillP | SkillC | F1 |",
+            "|---|---|---:|---:|---:|---:|---:|---:|",
+        ]
+        for s in focus:
+            lines.append(
+                f"| {s['season']} | {s['model']} | {s['n']} | {s['rmse']:.3f} | "
+                f"{s['anom_rmse']:.3f} | {s['skill_vs_persist']:.3f} | "
+                f"{s['skill_vs_clim']:.3f} | {s['hypoxia_f1']:.3f} |"
+            )
+
+    if bootstrap_rows:
+        lines += [
+            "",
+            "## Bootstrap CI (sample/time blocks)",
+            "",
+            "| Lead | Model | RMSE mean [p05,p95] | F1 mean [p05,p95] |",
+            "|---:|---|---|---|",
+        ]
+        for b in bootstrap_rows:
+            lines.append(
+                f"| {b['lead_months']} | {b['model']} | "
+                f"{b['rmse_mean']:.3f} [{b['rmse_p05']:.3f},{b['rmse_p95']:.3f}] | "
+                f"{b['f1_mean']:.3f} [{b['f1_p05']:.3f},{b['f1_p95']:.3f}] |"
+            )
+
     md_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     plot_lead_skill(

@@ -114,30 +114,48 @@ Lead-1 ST RMSE rises from 3.84 to 5.22 (still better than persistence 8.27); lea
 
 T/S + SST alone recover most of the mid-lead gain versus oxygen-only history. Real Open-Meteo (ERA5-backed) wind replaces the offline monsoon driver for the paper’s main physics run; synthetic wind can look stronger at lead 2 by aligning too cleanly with the seasonal DO cycle and is reported only as an ablation control. CDS ERA5 remains optional when credentials are available.
 
-**Argo/section sparsity.** With Argo-column masks, lead-1 ST RMSE ≈ 5.22 (still beats persistence). Section-extrapolation (oxygen visible only on a Yangtze plume transect) yields ST RMSE 5.21 vs persistence 8.26 — a full-field forecast from column-limited inputs.
+**Mask-View sparse bank (physics cube; `maskview_ablation.md`).** Dense history sets the upper bound (lead-1 ST 3.88). Contiguous `block_time` missingness remains comparatively mild (4.27). Random point / block / sensor / mixed masks raise lead-1 ST RMSE to ≈5.0–5.1; column-limited `station` / `argo` masks reach ≈5.23–5.24 — still beating persistence (8.27) and retaining positive skill vs climatology at lead 1. Beyond one month, hybrid/climatology again dominate.
 
-**Mask-View mixed + multiview** under physics: lead-1 ST RMSE 5.06; leads 2–3 again hybrid/climatology.
+| Sparse | Lead-1 ST | Lead-1 F1 | Lead-2 best |
+|---|---:|---:|---|
+| none | 3.88 | 0.74 | hybrid 5.08 |
+| block_time | 4.27 | 0.72 | hybrid 5.09 |
+| block | 4.99 | 0.68 | clim 5.23 |
+| point | 5.02 | 0.69 | clim 5.23 |
+| mixed | 5.07 | 0.68 | clim 5.23 |
+| sensor | 5.08 | 0.69 | clim 5.23 |
+| station | 5.23 | 0.67 | clim 5.23 |
+| argo | 5.24 | 0.67 | clim 5.23 |
 
-**Multi-region (demo cubes).** Yellow Sea lead-1 ST 3.04; Yangtze estuary lead-1 ST 2.88 — same lead-dependent hybrid story.
+**Seasonal skill (physics, lead 1).** ST beats climatology in both JJAS (3.85 vs 5.17; skillC 0.45) and DJF (3.93 vs 5.61; skillC 0.51). Summer low-O₂ F1 is 0.71 vs clim 0.58.
+
+**Uncertainty.** Block bootstrap over test months (lead 1 ST): RMSE 3.88 [3.77, 4.02]; F1 0.74 [0.69, 0.79]. Lead-2 hybrid RMSE 5.08 [4.94, 5.22] remains tighter than pure ST.
+
+**Physics multi-region subsets** (cropped from the ECS physics cube): Yangtze plume lead-1 hybrid 3.74 (skillC 0.41); southern Yellow Sea overlap lead-1 ST 3.92 (skillC 0.49). Lead-2 hybrid again beats climatology (Yangtze 4.65; YS 5.11).
+
+**Section / Argo.** Section-extrapolation (oxygen visible only on a Yangtze plume transect) yields ST RMSE ≈5.21 vs persistence 8.26 — a full-field forecast from column-limited inputs.
 
 ```bash
-py -3.12 run_multilead.py --physics --quick
-py -3.12 run_multilead.py --physics --maskview --sparse mixed --quick
-py -3.12 run_multilead.py --sparse argo --quick
+py -3.12 run_multilead.py --physics --quick --tag real_wind
+py -3.12 scripts/run_maskview_ablation.py --quick
+py -3.12 scripts/run_physics_region_sensitivity.py --quick
 py -3.12 scripts/eval_section_extrapolation.py --quick
-py -3.12 scripts/run_region_sensitivity.py
+py -3.12 scripts/export_forecast_product.py --quick
+py -3.12 scripts/compose_comparison_figures.py
 ```
 
 ### 4.5 Figures
-Composite plate: `results/figures/paper_plate_full.png`. Forecast demo map: `results/figures/forecast_demo_mae.png`.
+Physics plate: `results/figures/paper_plate_full_physics_real_wind.png`.  
+AIES comparison plate (physics / Mask-View / seasonal): `results/figures/aies_comparison_plate.png`.  
+Forecast product: `results/products/forecast_lead1_latest.nc`.
 
 ## 5. Discussion
 
-1. **Lead dependence is the story:** anomaly learning helps at 1 month; climatology dominates beyond.
-2. Hybrid blending operationalizes that transition without ad-hoc switching.
+1. **Lead dependence is the story:** anomaly learning helps at 1 month (skill vs clim ≈0.47); climatology dominates beyond unless hybrid blending retains a small ST weight (lead-2 skillC ≈0.05).
+2. Hybrid blending operationalizes that transition without ad-hoc switching; bootstrap intervals confirm lead-2 hybrid is more stable than pure ST.
 3. Physical covariates supply stratification and wind context when BGC reanalyses are unavailable; they do not replace a time-varying oxygen target for final journal claims.
-4. Mask-View patterns and section masks enforce an operational sparse-obs view: the model must **forecast the field**, not only interpolate dense maps.
-5. Multi-region sensitivity checks whether shelf hypoxia narratives transfer to the Yellow Sea and Yangtze plume.
+4. Mask-View patterns enforce an operational sparse-obs view: skill degrades gracefully from dense → block_time → point/mixed → station/Argo, and the model must **forecast the field**, not only interpolate dense maps.
+5. Physics-subset multi-region checks (Yangtze plume, southern Yellow Sea) reproduce the same lead-dependent hybrid narrative on real drivers.
 
 ## 6. Data and code availability
 

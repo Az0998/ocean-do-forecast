@@ -162,41 +162,55 @@
           </tr>
           <tr>
             <td><strong>+ physics (Open-Meteo wind)</strong></td>
-            <td>ST 3.88</td>
+            <td>ST 3.88 · skill vs clim 0.47</td>
             <td><strong>hybrid 5.08</strong> (ST 5.83 vs 8.69 O₂-only)</td>
             <td>clim/hybrid ≈5.21</td>
           </tr>
           <tr>
-            <td>Argo/section sparse</td>
-            <td>ST ≈5.22</td>
+            <td>Mask-View Argo/station</td>
+            <td>ST ≈5.23–5.24</td>
             <td>clim 5.23</td>
             <td>clim 5.21</td>
+          </tr>
+          <tr>
+            <td>Yangtze / S. Yellow Sea (physics subset)</td>
+            <td>hybrid 3.74 / ST 3.92</td>
+            <td>hybrid 4.65 / 5.11</td>
+            <td>hybrid/clim ≈4.8–5.3</td>
           </tr>
         </tbody>
       </table>
       <p class="note">
-        Physical channels (WOA T/S→N², OISST, wind) mainly lift mid-lead ST skill. Absolute hypoxia is rare;
-        events use adaptive P10 low-O<sub>2</sub> thresholds. Yellow Sea / Yangtze plume sensitivity tables are in the repo.
+        Lead-1 ST RMSE bootstrap CI [3.77, 4.02]. Seasonal JJAS/DJF both beat climatology.
+        Absolute hypoxia is rare; events use adaptive P10 low-O<sub>2</sub> thresholds.
       </p>
     </section>
 
     <section>
-      <h2>Paper plate</h2>
+      <h2>AIES evidence plate</h2>
       <figure>
-        <img src="assets/paper_plate_full.png" alt="Ocean-DO-Forecast paper plate: lead skill, RMSE, spatial and hypoxia panels" />
-        <figcaption>Composite figure from the WOA-informed full-field multilead run.</figcaption>
+        <img src="assets/aies_comparison_plate.png" alt="Physics ablation, Mask-View stress, and seasonal skill comparison" />
+        <figcaption>Physics / wind ablation · Mask-View sparse stress · seasonal lead-1 RMSE.</figcaption>
+      </figure>
+    </section>
+
+    <section>
+      <h2>Paper plate (physics + real wind)</h2>
+      <figure>
+        <img src="assets/paper_plate_full_physics_real_wind.png" alt="Ocean-DO-Forecast paper plate with physics drivers" />
+        <figcaption>Lead skill, RMSE, hypoxia F1, and depth RMSE on the Open-Meteo wind physics cube.</figcaption>
       </figure>
     </section>
 
     <section>
       <h2>Lead skill &amp; RMSE</h2>
       <figure>
-        <img src="assets/lead_skill_full.png" alt="Lead skill curves" />
-        <figcaption>Skill score by lead for persistence, climatology, LSTM, ST, and hybrid.</figcaption>
+        <img src="assets/lead_skill_full_physics_real_wind.png" alt="Lead skill curves with physics drivers" />
+        <figcaption>Skill vs persistence by lead; hybrid recovers mid-lead skill.</figcaption>
       </figure>
       <figure>
-        <img src="assets/lead_rmse_full.png" alt="Lead RMSE curves" />
-        <figcaption>RMSE by lead; hybrid recovers lead-2/3 when ST alone degrades.</figcaption>
+        <img src="assets/lead_rmse_full_physics_real_wind.png" alt="Lead RMSE curves with physics drivers" />
+        <figcaption>RMSE by lead under WOA T/S, OISST, and Open-Meteo wind.</figcaption>
       </figure>
     </section>
 
@@ -205,10 +219,10 @@
       <p class="code">
         pip install -r requirements.txt<br/>
         python scripts/bootstrap_and_smoke.py<br/>
-        python scripts/download_woa_oxygen.py<br/>
-        python scripts/build_woa_informed_cube.py<br/>
-        python run_multilead.py --demo --quick<br/>
-        python scripts/export_summary.py
+        python scripts/build_physics_cube.py<br/>
+        python run_multilead.py --physics --quick --tag real_wind<br/>
+        python scripts/run_maskview_ablation.py --quick<br/>
+        python scripts/compose_comparison_figures.py
       </p>
       <p class="note">
         For paper-grade claims, place GOBAI-O2 under <code>data/raw/gobai/</code> (DOI 10.25921/z72m-yz67)

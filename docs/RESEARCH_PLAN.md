@@ -66,8 +66,8 @@
 | 1–2 | 区域冻结 + 数据卡 + 下载脚本 | `dataset_card/` 可独立复现样本统计 | ✅ demo 立方体；`subset_gobai.py` 就绪 |
 | 3–5 | 全部基线跑通 | `results/tables/baselines.md` | ✅ + `run_multilead.py` 1/2/3 月 |
 | 6–8 | 主模型 + 物理残差 + Mask-View | 消融表；beat persistence @30d | ✅ ST+物理；`--sparse station/point/block` |
-| 9–10 | 事件评估 + 主图 | 投稿级图 ≥300 dpi | ✅ lead/深度/空间图；自适应低氧阈值；待 GOBAI |
-| 11–12 | Zenodo + 手稿 v1 | 按 AIES 词数与结构成稿 | 🟡 `paper/manuscript_draft.md` 已起稿 |
+| 9–10 | 事件评估 + 主图 | 投稿级图 ≥300 dpi | ✅ lead/深度/空间/季节/Mask-View/物理对比板；bootstrap CI |
+| 11–12 | Zenodo + 手稿 v1 | 按 AIES 词数与结构成稿 | 🟡 手稿含消融+季节+多区域；待 Zenodo DOI |
 
 ## 8. 风险与缓解
 

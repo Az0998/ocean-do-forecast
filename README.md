@@ -15,9 +15,11 @@
 | 物理协变量（WOA T/S · OISST · Open-Meteo 风） | ✅ `build_physics_cube.py` |
 | 多 lead + hybrid | ✅ `run_multilead.py` |
 | Mask-View 稀疏库（point/block/block_time/sensor/station/mixed/argo） | ✅ |
-| 断面外推 / 多区域敏感性 | ✅ `eval_section_extrapolation` · `run_region_sensitivity` |
-| 手稿（英）/ Cover letter / 组合图 | ✅ `paper/` |
-| Forecast demo | ✅ `scripts/forecast_demo.py` |
+| 断面外推 / 多区域敏感性 | ✅ demo + physics 子集（黄海/长江口） |
+| Mask-View 全模式消融 | ✅ `run_maskview_ablation.py` |
+| 季节技巧 + bootstrap CI | ✅ `run_multilead.py` 输出 |
+| 手稿（英）/ Cover letter / 组合图 | ✅ `paper/` · `aies_comparison_plate.png` |
+| Forecast product NetCDF | ✅ `scripts/export_forecast_product.py` |
 | GOBAI 真时变氧 | ⬜ 可选本地导入（非必须） |
 
 ## 30 秒冒烟
@@ -43,14 +45,15 @@ py -3.12 scripts/run_physics_ablation.py --skip-download
 py -3.12 scripts/download_era5_cds.py
 ```
 
-## 真稀疏 / 断面 / 多区域
+## 真稀疏 / 断面 / 多区域 / 产品
 
 ```bash
 py -3.12 scripts/fetch_argo_stations.py              # Argovis；失败则用长江口断面
-py -3.12 run_multilead.py --sparse argo --quick
+py -3.12 scripts/run_maskview_ablation.py --quick    # 全 Mask-View 消融表
 py -3.12 scripts/eval_section_extrapolation.py --quick
-py -3.12 scripts/run_region_sensitivity.py           # 黄海 / 长江口
-py -3.12 scripts/forecast_demo.py --physics --quick
+py -3.12 scripts/run_physics_region_sensitivity.py --quick  # physics 子集
+py -3.12 scripts/export_forecast_product.py --quick  # lead-1 NetCDF
+py -3.12 scripts/compose_comparison_figures.py
 ```
 
 ## 常用命令

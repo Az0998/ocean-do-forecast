@@ -2,18 +2,20 @@
 
 ## 科学叙事
 
-- [ ] 摘要前两句区分「预报」vs「重建（GOBAI 等）」
-- [ ] 明确区域、深度、lead、事件阈值
-- [ ] 至少一张 lead–skill 曲线相对 persistence/climatology
-- [ ] 缺氧事件指标（CSI/F1）与空间技巧图
-- [ ] 讨论失败模态（锋区、跃层、数据空洞）
+- [x] 摘要前两句区分「预报」vs「重建（GOBAI 等）」
+- [x] 明确区域、深度、lead、事件阈值
+- [x] 至少一张 lead–skill 曲线相对 persistence/climatology
+- [x] 缺氧事件指标（CSI/F1）与空间技巧图
+- [x] 物理消融 + Mask-View 全模式 + 季节 + bootstrap CI
+- [ ] 讨论失败模态（锋区、跃层、数据空洞）— 手稿可再扩写
+- [ ] GOBAI 时变氧上复现主表（可选加强）
 
 ## 开放科学
 
-- [ ] 训练数据来源 DOI/URL + 访问日期
-- [ ] 代码 GitHub 公开
+- [x] 训练数据来源 DOI/URL（WOA / OISST / Open-Meteo；GOBAI 可选）
+- [x] 代码 GitHub 公开
 - [ ] Zenodo（或同等）归档 DOI，写入 Data/Code Availability
-- [ ] 随机种子与环境 `environment.yml` / `requirements.txt` 锁定
+- [x] 随机种子与环境 `requirements.txt` 锁定
 
 ## 文稿格式
 
@@ -36,9 +38,10 @@
 
 ## 图件
 
-- [ ] ≥300 dpi；色盲友好
-- [ ] 每张图可独立读懂（区域、单位、lead）
-- [ ] 不堆砌无对比的 architecture 大图
+- [x] paper plate + AIES comparison plate（physics / Mask-View / seasonal）
+- [ ] ≥300 dpi；色盲友好（投稿前再检）
+- [x] 每张图可独立读懂（区域、单位、lead）
+- [x] 不堆砌无对比的 architecture 大图
 
 ## 伦理与行政
 
