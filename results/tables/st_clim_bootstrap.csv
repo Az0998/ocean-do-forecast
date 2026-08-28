@@ -1,0 +1,5 @@
+pattern,lead,epochs,n_test,st_rmse,clim_rmse,persist_locf_rmse,point_delta_clim_minus_st,st_rmse_p05,st_rmse_p50,st_rmse_p95,clim_rmse_p05,clim_rmse_p50,clim_rmse_p95,delta_clim_minus_st_p05,delta_clim_minus_st_p50,delta_clim_minus_st_p95,frac_boot_st_better,ci_excludes_zero,st_significantly_better,n_boot
+none,1,8,22,3.871,5.298,8.265,1.426,3.763,3.878,4.002,5.162,5.298,5.465,1.344,1.431,1.537,1.0,True,True,200
+point,1,8,22,5.001,5.298,6.176,0.296,4.887,5.000,5.144,5.162,5.298,5.465,0.264,0.299,0.343,1.0,True,True,200
+station,1,8,22,5.220,5.298,5.599,0.078,5.090,5.220,5.377,5.162,5.298,5.465,0.064,0.079,0.093,1.0,True,True,200
+argo,1,8,22,5.235,5.298,5.538,0.062,5.094,5.234,5.408,5.162,5.298,5.465,0.051,0.061,0.071,1.0,True,True,200

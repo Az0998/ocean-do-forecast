@@ -1,0 +1,11 @@
+pattern,keep_ratio,n_stations,keep_frac,n_water_voxels,lead,epochs,n_test,st_rmse,clim_rmse,persist_locf_rmse,point_delta_clim_minus_st,winner,delta_clim_minus_st_p05,delta_clim_minus_st_p50,delta_clim_minus_st_p95,frac_boot_st_better,st_significantly_better,n_boot
+none,1.0,8,1.0,450,1,8,22,3.871,5.298,8.265,1.426,st_transformer,1.344,1.431,1.537,1.0,True,200
+point,0.1,8,0.1011,450,1,8,22,5.214,5.298,5.68,0.084,st_transformer,0.071,0.083,0.098,1.0,True,200
+point,0.2,8,0.1987,450,1,8,22,5.069,5.298,6.013,0.228,st_transformer,0.197,0.229,0.267,1.0,True,200
+point,0.25,8,0.2487,450,1,8,22,5.012,5.298,6.176,0.286,st_transformer,0.26,0.288,0.321,1.0,True,200
+point,0.3,8,0.2952,450,1,8,22,4.956,5.298,6.35,0.342,st_transformer,0.306,0.344,0.394,1.0,True,200
+point,0.5,8,0.4983,450,1,8,22,4.655,5.298,6.962,0.643,st_transformer,0.585,0.648,0.718,1.0,True,200
+station,0.25,4,0.0444,450,1,8,22,5.284,5.298,5.461,0.013,st_transformer,0.006,0.014,0.022,0.995,True,200
+station,0.25,8,0.0889,450,1,8,22,5.233,5.298,5.599,0.064,st_transformer,0.054,0.065,0.075,1.0,True,200
+station,0.25,16,0.1778,450,1,8,22,5.129,5.298,5.988,0.169,st_transformer,0.155,0.168,0.184,1.0,True,200
+station,0.25,24,0.2667,450,1,8,22,4.963,5.298,6.255,0.335,st_transformer,0.304,0.337,0.369,1.0,True,200
