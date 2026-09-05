@@ -1,10 +1,12 @@
-# Ocean-DO-Forecast
+# Ocean-DO-Forecast（东海溶解氧中长期预报）
 
-区域海洋溶解氧 **中长期月尺度预报**（1–3 个月 ≈ 30–90 天）+ 缺氧事件指标。  
-与 `water-ai-do-forecast` / Dianchi Mask-View 同一 IP：**观测残缺下的溶解氧时空重建与预见期预报**。
+> **一句话：** 东海陆架溶解氧 **1–3 个月** 预见期预报 + 缺氧事件指标；在 Mask-View 稀疏观测下做压力测试。个人兴趣自学，手稿打磨中，**尚无录用**。
 
-- **Project site**: https://az0998.github.io/ocean-do-forecast/
-- **Public repo**: https://github.com/Az0998/ocean-do-forecast
+**仓库：** https://github.com/Az0998/ocean-do-forecast  
+**作者：** 张森捷（Senjie Zhang），兰州大学  
+与滇池 Mask-View 同一兴趣线：**观测残缺下的溶解氧时空问题**。
+
+- （若已开启 Pages）演示：https://az0998.github.io/ocean-do-forecast/
 
 ## 当前状态
 
