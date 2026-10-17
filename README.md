@@ -6,7 +6,7 @@
 **作者：** 张森捷（Senjie Zhang），兰州大学  
 与滇池 Mask-View 同一兴趣线：**观测残缺下的溶解氧时空问题**。
 
-- （若已开启 Pages）演示：https://az0998.github.io/ocean-do-forecast/
+- 项目页 / 演示：https://az0998.github.io/ocean-do-forecast/
 
 ## 当前状态
 
